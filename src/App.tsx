@@ -1,20 +1,10 @@
-import { Route, Routes } from 'react-router-dom'
-import Login from 'pages/login/login'
-import ProtectedRoute from 'routes/protectedRoute'
-
 function App() {
   return (
     <>
-      <Routes>
-        <Route
-          path="/login"
-          element={
-            <ProtectedRoute>
-              <Login />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md hover:bg-blue-600">
+        Xin chào
+      </div>
+
     </>
   )
 }
