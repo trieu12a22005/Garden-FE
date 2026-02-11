@@ -1,11 +1,14 @@
+import { Route, Routes } from "react-router-dom"
+import Login from "./pages/login/Login"
+import MainLayout from "./components/layouts/mainLayout"
+
 function App() {
   return (
-    <>
-      <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md hover:bg-blue-600">
-        Xin chào
-      </div>
-
-    </>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/login" element={<Login />} />
+      </Route>
+    </Routes>
   )
 }
 
