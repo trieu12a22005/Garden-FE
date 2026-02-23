@@ -47,7 +47,22 @@
       ],
       "routes/*": [
         "./src/routes/*"
-      ]
+      ],
+      "utils/*": [
+        "./src/utils/*"
+      ], // Các hàm utility/helper
+      "hooks/*": [
+        "./src/hooks/*"
+      ], // Custom React hooks
+      "services/*": [
+        "./src/services/*"
+      ], // API services, HTTP calls
+      "types/*": [
+        "./src/types/*"
+      ], // TypeScript types/interfaces
+      "constants/*": [
+        "./src/constants/*"
+      ] // Các hằng số ứng dụng
     }
   },
   "include": [
