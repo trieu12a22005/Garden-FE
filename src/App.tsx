@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import Login from './pages/login/Login';
+import Login from 'pages/login/Login';
 import MainLayout from 'components/layouts/MainLayout';
-import Portfolio from './pages/portfolio';
+import Portfolio from 'pages/portfolio';
 // import './App.css';
 function App() {
   return (
