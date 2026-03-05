@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import authApi from 'apis/auth';
+import { useMutation } from '@tanstack/react-query';
 
 // Định nghĩa schema validation với zod
 const loginSchema = z.object({
@@ -27,9 +29,22 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const mutation = useMutation({
+    mutationFn: (data: LoginFormData) => authApi.login(data),
+    onSuccess: (data) => {
+      console.log('Login successful:', data);
+      // Lưu token vào localStorage hoặc context
+      localStorage.setItem('token', data.token);
+      // Redirect hoặc cập nhật UI sau khi đăng nhập thành công
+    },
+    onError: (error) => {
+      console.error('Login failed:', error);
+      // Hiển thị lỗi cho người dùng
+    },
+  });
+
   const onSubmit = (data: LoginFormData) => {
-    console.log('Form data:', data);
-    // Xử lý đăng nhập ở đây
+    mutation.mutate(data);
   };
 
   return (
