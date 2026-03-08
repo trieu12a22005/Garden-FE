@@ -1,6 +1,5 @@
-import React from 'react';
 import { Avatar, Calendar, Collapse, theme } from 'antd';
-
+import { useNavigate } from 'react-router-dom';
 const RoleHome = () => {
     // 1. Dữ liệu User
     const user = {
@@ -8,7 +7,6 @@ const RoleHome = () => {
         role: 'doctor',
         avatar: 'https://www.shutterstock.com/image-vector/male-doctor-smiling-happy-face-600nw-2481032615.jpg',
     };
-
     // 2. Danh sách thông báo
     const announcements = [
         {
@@ -89,7 +87,11 @@ const RoleHome = () => {
         borderRadius: token.borderRadiusLG,
         backgroundColor: '#ffffff',
     };
-
+    const navigate = useNavigate()
+    const handleClick = () =>{
+        navigate("/timetable")
+        
+    }
     return (
         <div className="min-h-screen bg-white pb-12 font-sans text-gray-800">
             {/* THANH TÌM KIẾM */}
@@ -108,7 +110,6 @@ const RoleHome = () => {
                 </div>
             </div>
 
-            {/* ================= KHU VỰC HEADER (HỒ SƠ) NẰM ĐỘC LẬP TRÊN CÙNG ================= */}
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 mt-4 mb-8">
                 <div className="flex items-center gap-4">
                     <Avatar size={64} src={user.avatar} className="border border-gray-200" />
@@ -139,7 +140,7 @@ const RoleHome = () => {
                     </div>
                 </div>
 
-                {/* CỘT 2: Chức năng (Chiếm 6/12 - Rộng nhất) */}
+                {/* CỘT 2: Chức năng */}
                 <div className="xl:col-span-6">
                     <h2 className="text-lg text-gray-700 font-bold mb-4 border-b pb-2 border-gray-200">
                         Các chức năng của tôi
@@ -149,6 +150,7 @@ const RoleHome = () => {
                             <div 
                                 key={feature.id} 
                                 className="rounded-md border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+                                onClick={handleClick}
                             >
                                 <h3 className="text-lg sm:text-[20px] font-bold text-[#0066cc] mb-2 cursor-pointer hover:underline leading-tight">
                                     {feature.title}
@@ -169,7 +171,7 @@ const RoleHome = () => {
                     </div>
                 </div>
 
-                {/* CỘT 3: Widget Lịch (Chiếm 3/12 - Thu nhỏ lại) */}
+                {/* CỘT 3: Widget Lịch */}
                 <div className="xl:col-span-3">
                     <div className="rounded-md border border-gray-200 bg-[#f8f9fa] p-5 shadow-sm">
                         <h2 className="text-lg font-bold mb-4 text-gray-700 border-b pb-2 border-transparent">
@@ -177,7 +179,6 @@ const RoleHome = () => {
                         </h2>
                         
                         <div style={wrapperStyle}>
-                            {/* Calendar giờ sẽ vừa vặn trong cái khung 3/12 nhỏ xinh này */}
                             <Calendar fullscreen={false} />
                         </div>
 
