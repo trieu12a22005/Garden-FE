@@ -61,7 +61,10 @@
       ], // TypeScript types/interfaces
       "constants/*": [
         "./src/constants/*"
-      ] // Các hằng số ứng dụng
+      ], // Các hằng số ứng dụng
+      "apis/*": [
+        "./src/apis/*"
+      ] // Các module liên quan đến API (axios instance, api client, v.v.)
     }
   },
   "include": [
