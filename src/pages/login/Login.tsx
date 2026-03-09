@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import authApi from 'apis/auth';
 import { useMutation } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 // Định nghĩa schema validation với zod
 const loginSchema = z.object({
@@ -32,14 +33,13 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: (data: LoginFormData) => authApi.login(data),
     onSuccess: (data) => {
-      console.log('Login successful:', data);
-      // Lưu token vào localStorage hoặc context
+     toast.success("Đăng nhập thành công");
       localStorage.setItem('token', data.token);
       // Redirect hoặc cập nhật UI sau khi đăng nhập thành công
     },
     onError: (error) => {
-      console.error('Login failed:', error);
-      // Hiển thị lỗi cho người dùng
+      
+      toast.error(error?.message || "Đăng nhập thất bại");
     },
   });
 
