@@ -2,12 +2,12 @@ import { apiClient } from './axios';
 
 class AuthApi {
     async login(data: { email: string; password: string }) {
-        try {
-            const response = await apiClient.post('/auth/login', data);
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
+        const response = await apiClient.post('/auth/login', data);
+        return response.data;
+    }
+    async logout() {
+        const response = await apiClient.post('/auth/logout');
+        return response.data;
     }
 }
 

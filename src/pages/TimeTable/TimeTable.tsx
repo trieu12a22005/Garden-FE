@@ -12,7 +12,7 @@ export interface ScheduleDetail {
     maxPatients: number;
     doctor: string;
     colorClass: string;
-    containerHoverClass: string; // Quản lý màu hover riêng (vd: xanh, vàng, đỏ...)
+    containerHoverClass: string; 
 }
 
 export interface RoomData {
@@ -27,8 +27,6 @@ export default function RoomSchedule() {
 
     const facultys: string[] = ['KHU A', 'KHU B', 'KHU C', 'PHÒNG MỔ', 'XÉT NGHIỆM'];
     const tabs: string[] = ['CÁ NHÂN', 'TOÀN BỆNH VIỆN'];
-
-    // Mảng dữ liệu Header (Các ngày trong tuần)
     const weekDays: WeekDay[] = [
         { key: 't2', label: 'Thứ 2', date: '02-03-2026' },
         { key: 't3', label: 'Thứ 3', date: '03-03-2026' },
@@ -38,13 +36,11 @@ export default function RoomSchedule() {
         { key: 't7', label: 'Thứ 7', date: '07-03-2026' },
         { key: 'cn', label: 'Chủ nhật', date: '08-03-2026' },
     ];
-
-    // Mảng dữ liệu Phòng Khám (Thay thế cho cấu trúc Ca trực cũ)
     const roomsData: RoomData[] = [
         {
             id: 'room_1',
             name: 'P.Nội 1',
-            faculty: 'kHOA A', // Giữ nguyên text của bạn
+            faculty: 'kHOA A',
             schedules: {
                 t2: {
                     title: 'Khám Nội Tổng Quát',
@@ -71,7 +67,7 @@ export default function RoomSchedule() {
                     title: 'Khám Tim Mạch',
                     maxPatients: 30,
                     doctor: 'BS: Văn Đức Sơn Hà',
-                    colorClass: 'text-[#d48806]', // Đổi màu chữ test thử
+                    colorClass: 'text-[#d48806]', 
                     containerHoverClass: 'hover:bg-yellow-50'
                 },
                 t5: {
@@ -195,8 +191,6 @@ export default function RoomSchedule() {
                                                 </td>
                                             );
                                         }
-
-                                        // Nếu ngày đó KHÔNG CÓ lịch (Phòng trống)
                                         return <td key={day.key} className="border border-gray-300 p-3"></td>;
                                     })}
 
