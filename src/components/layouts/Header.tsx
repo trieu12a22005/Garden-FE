@@ -50,7 +50,6 @@ const Header: React.FC = () => {
   const mautition = useMutation({
     mutationFn: () => authApi.logout(),
     onSuccess: () => {
-      localStorage.removeItem("token");
       toast.success("Đăng xuất thành công");
       navigate("/login");
     },
