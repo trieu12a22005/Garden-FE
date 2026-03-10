@@ -63,19 +63,25 @@ const RoleHome = () => {
             id: 1,
             title: 'Quản lý Lịch làm việc - SCH.01',
             description: 'Hỗ trợ lên lịch hẹn, theo dõi ca trực và sắp xếp phòng khám.',
-            accessLevel: 'Bác sĩ, Lễ tân',
+            path: '/timetable'
         },
         {
             id: 2,
             title: 'Hồ sơ Bệnh án điện tử - EMR.02',
             description: 'Tra cứu lịch sử khám bệnh, kết quả xét nghiệm và thông tin y tế.',
-            accessLevel: 'Bác sĩ, Y tá',
+            path: '/medical-records'
         },
         {
             id: 3,
             title: 'Kê đơn thuốc & Dược phẩm - PHA.03',
             description: 'Tạo đơn thuốc mới, kiểm tra tương tác thuốc và tra cứu tồn kho.',
-            accessLevel: 'Bác sĩ, Dược sĩ',
+            path: '/prescriptions'
+        },
+        {
+            id: 4,
+            title: 'Phiếu khám bệnh',
+            description: 'ghi kết quả khám bệnh, chẩn đoán và kế hoạch điều trị cho bệnh nhân',
+            path: '/examination'
         }
     ];
 
@@ -88,8 +94,8 @@ const RoleHome = () => {
         backgroundColor: '#ffffff',
     };
     const navigate = useNavigate()
-    const handleClick = () =>{
-        navigate("/timetable")
+    const handleClick = (path:string) =>{
+        navigate(path);
         
     }
     return (
@@ -150,7 +156,7 @@ const RoleHome = () => {
                             <div 
                                 key={feature.id} 
                                 className="rounded-md border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
-                                onClick={handleClick}
+                                onClick ={() => handleClick(feature.path)}
                             >
                                 <h3 className="text-lg sm:text-[20px] font-bold text-[#0066cc] mb-2 cursor-pointer hover:underline leading-tight">
                                     {feature.title}
@@ -160,10 +166,6 @@ const RoleHome = () => {
                                     <p>
                                         <strong className="font-semibold text-gray-900">Mô tả: </strong> 
                                         <span className="text-gray-600">{feature.description}</span>
-                                    </p>
-                                    <p>
-                                        <strong className="font-semibold text-gray-900">Quyền truy cập: </strong> 
-                                        <span className="text-gray-600">{feature.accessLevel}</span>
                                     </p>
                                 </div>
                             </div>
