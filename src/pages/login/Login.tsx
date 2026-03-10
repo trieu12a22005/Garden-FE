@@ -4,6 +4,7 @@ import { z } from 'zod';
 import authApi from 'apis/auth';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 // Định nghĩa schema validation với zod
 const loginSchema = z.object({
@@ -22,6 +23,8 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -32,10 +35,9 @@ const Login = () => {
 
   const mutation = useMutation({
     mutationFn: (data: LoginFormData) => authApi.login(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
      toast.success("Đăng nhập thành công");
-      localStorage.setItem('token', data.token);
-      // Redirect hoặc cập nhật UI sau khi đăng nhập thành công
+      navigate('/');
     },
     onError: (error) => {
       
