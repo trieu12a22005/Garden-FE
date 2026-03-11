@@ -3,19 +3,20 @@ import Login from 'pages/login/Login';
 import MainLayout from 'components/layouts/MainLayout';
 import Portfolio from 'pages/portfolio';
 import RoleHome from './pages/RoleHome/RoleHome';
-import TimeTable from './pages/TimeTable/TimeTable';
 import Examination from './pages/Examination/ExaminationForm';
-
+import Timetable from './pages/TimeTable';
+import GlobalLoading from './components/GlobalLoading';
 // import './App.css';
 function App() {
   return (
     <>
+    <GlobalLoading />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/login" element={<Login />} />
           <Route index element={<Portfolio />}></Route>
           <Route path = "/role_home" element = {<RoleHome />} />
-          <Route path='/timetable' element = {<TimeTable/>} />
+          <Route path='/timetable' element = {<Timetable/>} />
           <Route path='/examination' element = {<Examination/>} />
         </Route>
       </Routes>
