@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useTimetable } from "../useTimetable";
 import FacultyService from "@/services/facultyService";
 import FacultyFilter from "./FacultyFilter";
+import { Button, Dropdown } from "antd";
+import { MoreOutlined } from "@ant-design/icons";
+
 export interface WeekDay {
     key: string;
     label: string;
@@ -68,10 +71,39 @@ const TimetableList = ({ doctorId }: { doctorId: string }) => {
                             <tr className="bg-gray-50 text-gray-800">
                                 <th className="border border-gray-300 p-2 w-[120px]">Phòng khám</th>
                                 {weekDays.map((day) => (
-                                    <th key={day.key} className="border border-gray-300 p-2 w-[12%]">
-                                        {day.label}<br />
+
+                                    <th
+                                        key={day.key}
+                                        className="relative border border-gray-300 p-2 pr-8 w-[12%]"
+                                    >
+                                        {day.label}
+                                        <br />
                                         <span className="font-normal text-xs">({day.date})</span>
+
+                                        <div className="absolute right-1 top-1">
+                                            <Dropdown
+                                                menu={{
+                                                    items: [
+                                                        { key: "edit", label: "Sửa" },
+                                                        { key: "delete", label: "Xóa" },
+                                                        { key: "detail", label: "Chi tiết" },
+                                                    ],
+                                                    onClick: ({ key }) => {
+                                                        console.log(key, day);
+                                                    },
+                                                }}
+                                                trigger={["click"]}
+                                                placement="bottomRight"
+                                            >
+                                                <Button
+                                                    type="text"
+                                                    icon={<MoreOutlined />}
+                                                    onClick={(e) => e.preventDefault()}
+                                                />
+                                            </Dropdown>
+                                        </div>
                                     </th>
+
                                 ))}
                             </tr>
                         </thead>
