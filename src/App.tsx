@@ -5,6 +5,8 @@ import Portfolio from 'pages/portfolio';
 import RoleHome from './pages/RoleHome/RoleHome';
 import Examination from './pages/Examination/ExaminationForm';
 import Timetable from './pages/TimeTable';
+import PharmacyQueue from './pages/PharmacyQueue';
+import PrescriptionDetail from './pages/PharmacyQueue/PrescriptionDetail';
 import GlobalLoading from './components/GlobalLoading';
 // import './App.css';
 function App() {
@@ -18,6 +20,8 @@ function App() {
           <Route path = "/role_home" element = {<RoleHome />} />
           <Route path='/timetable' element = {<Timetable/>} />
           <Route path='/examination' element = {<Examination/>} />
+          <Route path='/pharmacy-queue' element={<PharmacyQueue />} />
+          <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
         </Route>
       </Routes>
     </>

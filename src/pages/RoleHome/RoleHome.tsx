@@ -79,6 +79,12 @@ const RoleHome = () => {
         },
         {
             id: 4,
+            title: 'Quản lý hàng đợi phát thuốc - PHA.01',
+            description: 'Theo dõi hàng đợi, xem đơn thuốc và xác nhận phát thuốc cho bệnh nhân.',
+            path: '/pharmacy-queue'
+        },
+        {
+            id: 5,
             title: 'Phiếu khám bệnh',
             description: 'ghi kết quả khám bệnh, chẩn đoán và kế hoạch điều trị cho bệnh nhân',
             path: '/examination'
