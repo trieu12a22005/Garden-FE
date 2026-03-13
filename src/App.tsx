@@ -6,6 +6,7 @@ import RoleHome from './pages/RoleHome/RoleHome';
 import Examination from './pages/Examination/ExaminationForm';
 import Timetable from './pages/TimeTable';
 import GlobalLoading from './components/GlobalLoading';
+import Prescription from './pages/Prescription/Prescription';
 // import './App.css';
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path = "/role_home" element = {<RoleHome />} />
           <Route path='/timetable' element = {<Timetable/>} />
           <Route path='/examination' element = {<Examination/>} />
+          <Route path='/prescription' element = {<Prescription/>} />
         </Route>
       </Routes>
     </>
