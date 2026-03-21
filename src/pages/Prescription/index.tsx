@@ -1,0 +1,285 @@
+import React, { useState } from 'react';
+import {Button, Col, DatePicker, Form, Input, InputNumber, Radio, Row, Select, Space, Table, message,} from 'antd';
+import { UsePrescription } from './usePrescription';
+import type { Medicine } from '@/types/medicine';
+import { fullLayout, itemLayout } from './components/constant';
+import type { PrescriptionMedicine, TableRow, UsageItem } from '@/types/Prescription';
+import { getMedicineColumns } from './components/medicineColumns';
+import MedicineSection from './components/MedicineSection';
+import { buildPdfData, exportPrescriptionPdf } from './components/pdf';
+const Prescription: React.FC = () => {
+  const [keyword, setKeyword] = useState('');
+  const [form] = Form.useForm();
+  const [medicineList, setMedicineList] = useState<PrescriptionMedicine[]>([]);
+  const { medicineOptions = [] } = UsePrescription(keyword);
+  const medicineSelectOptions = medicineOptions.map((item: Medicine) => ({
+    label: item.medicineName,
+    value: item.medicineID,
+  }));
+  const handleAddMedicineToList = async () => {
+    try {
+      await form.validateFields(['medicineId', 'usages']);
+      const medicineId = form.getFieldValue('medicineId');
+      const usages: UsageItem[] = form.getFieldValue('usages') || [];
+      if (!medicineId) {
+        message.warning('Vui lòng chọn thuốc');
+        return;
+      }
+      if (!usages.length) {
+        message.warning('Vui lòng thêm ít nhất 1 cách dùng');
+        return;
+      }
+      const hasEmptyUsage = usages.some(
+        (item) => !item?.timeToTake || !item?.quantity || !item?.usage
+      );
+      if (hasEmptyUsage) {
+        message.warning('Vui lòng nhập đầy đủ các cách dùng');
+        return;
+      }
+      const selectedMedicine = medicineOptions.find(
+        (item: Medicine) => item.medicineID === medicineId
+      );
+      if (!selectedMedicine) {
+        message.error('Không tìm thấy thuốc đã chọn');
+        return;
+      }
+      setMedicineList((prev) => [
+        ...prev,
+        {
+          medicineId: selectedMedicine.medicineID,
+          medicineName: selectedMedicine.medicineName,
+          usages,
+        },
+      ]);
+      form.setFieldsValue({
+        medicineId: undefined,
+        usages: [{}],
+      });
+      setKeyword('');
+      message.success('Đã thêm thuốc vào danh sách');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleRemoveMedicine = (medicineIndex: number) => {
+    setMedicineList((prev) => prev.filter((_, index) => index !== medicineIndex));
+  };
+  const tableData: TableRow[] = medicineList.map((item, index) => ({
+    key: index,
+    medicineId: item.medicineId,
+    medicineName: item.medicineName,
+    totalQuantity: item.usages.reduce(
+      (sum, usage) => sum + Number(usage.quantity || 0),
+      0
+    ),
+    usagesText: item.usages
+      .map((usage, usageIndex) => {
+        const parts = [
+          usage.timeToTake,
+          usage.quantity ? `${usage.quantity} viên` : '',
+          usage.usage,
+        ].filter(Boolean);
+
+        return parts.length ? `${usageIndex + 1}. ${parts.join(' - ')}` : '';
+      })
+      .filter(Boolean)
+      .join('\n'),
+  }));
+
+  const columns = getMedicineColumns({
+    onRemove: handleRemoveMedicine,
+  });
+const handleExportPdf = async () => {
+  const values = form.getFieldsValue();
+  const pdfData = buildPdfData({
+    values,
+    medicineList,
+  });
+  await exportPrescriptionPdf(pdfData);
+};
+  const onFinish = (values: Record<string, unknown>) => {
+    if (medicineList.length === 0) {
+      message.warning('Vui lòng thêm ít nhất 1 thuốc vào danh sách');
+      return;
+    }
+    const payload = {
+      ...values,
+      medicines: medicineList,
+    };
+    console.log('submit payload:', payload);
+    message.success('Lưu phiếu khám thành công');
+  };
+  return (
+    <div className="px-8 pb-8 mr-[6%]">
+      <div className="mt-6 text-center text-2xl font-bold uppercase text-gray-700">
+        PHIẾU KHÁM BỆNH
+      </div>
+      <Form
+        form={form}
+        layout="horizontal"
+        style={{ width: '100%', marginTop: '50px' }}
+        onFinish={onFinish}
+        initialValues={{ usages: [{}] }}
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              {...itemLayout}
+              label="Họ và tên"
+              name="name"
+              rules={[{ required: true, message: 'Vui lòng nhập họ tên' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              {...itemLayout}
+              label="Số điện thoại"
+              name="phone"
+              rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              {...itemLayout}
+              label="Ngày khám"
+              name="date"
+              rules={[{ required: true, message: 'Vui lòng chọn ngày khám' }]}
+            >
+              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              {...itemLayout}
+              label="Giới tính"
+              name="gender"
+              rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}
+            >
+              <Radio.Group>
+                <Radio value="Nam">Nam</Radio>
+                <Radio value="Nữ">Nữ</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              {...itemLayout}
+              label="Địa chỉ"
+              name="address"
+              rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              {...itemLayout}
+              label="Cân nặng"
+              name="weight"
+              rules={[{ required: true, message: 'Vui lòng nhập cân nặng' }]}
+            >
+              <InputNumber style={{ width: '100%' }} min={1} />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item
+              {...itemLayout}
+              label="Huyết áp"
+              name="pressure"
+              rules={[{ required: true, message: 'Vui lòng nhập huyết áp' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item
+          {...fullLayout}
+          label="Loại khám"
+          name="type"
+          rules={[{ required: true, message: 'Vui lòng chọn loại khám' }]}
+        >
+          <Select
+            options={[
+              { label: 'Khám tổng quát', value: 'Khám tổng quát' },
+              { label: 'Khám nội', value: 'Khám nội' },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item
+          {...fullLayout}
+          label="Triệu chứng"
+          name="symptom"
+          rules={[{ required: true, message: 'Vui lòng nhập triệu chứng' }]}
+        >
+          <Input.TextArea rows={4} />
+        </Form.Item>
+        <Form.Item
+          {...fullLayout}
+          label="Chẩn đoán"
+          name="diagnose"
+          rules={[{ required: true, message: 'Vui lòng nhập chẩn đoán' }]}
+        >
+          <Input.TextArea rows={4} />
+        </Form.Item>
+        <Form.Item
+          {...fullLayout}
+          label="Ghi chú"
+          name="note"
+          rules={[{ required: true, message: 'Vui lòng nhập ghi chú' }]}
+        >
+          <Input.TextArea rows={4} />
+        </Form.Item>
+        <MedicineSection
+          medicineSelectOptions={medicineSelectOptions}
+          setKeyword={setKeyword}
+          onAddMedicine={handleAddMedicineToList}
+        />
+        <Form.Item
+          label="Danh sách thuốc"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+        >
+          <Table
+            rowKey="key"
+            bordered
+            style={{ marginTop: 16, marginBottom: 24 }}
+            columns={columns}
+            dataSource={tableData}
+            pagination={false}
+            locale={{ emptyText: 'Chưa có thuốc nào' }}
+          />
+        </Form.Item>
+        <Form.Item
+          wrapperCol={{ span: 24 }}
+          style={{ textAlign: 'center', marginTop: 24 }}
+        >
+          <Space>
+            <Button
+              htmlType="button"
+              onClick={() => {
+                form.resetFields();
+                form.setFieldsValue({ usages: [{}] });
+                setMedicineList([]);
+              }}
+            >
+              Hủy
+            </Button>
+            <Button type="primary" htmlType="submit">
+              Lưu phiếu khám
+            </Button>
+            <Button onClick={handleExportPdf}>In PDF</Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </div>
+  );
+};
+export default Prescription;

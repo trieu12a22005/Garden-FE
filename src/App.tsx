@@ -9,7 +9,7 @@ import PharmacyQueue from './pages/PharmacyQueue';
 import PrescriptionDetail from './pages/PharmacyQueue/PrescriptionDetail';
 import PharmacyInventory from './pages/PharmacyInventory';
 import GlobalLoading from './components/GlobalLoading';
-import Prescription from './pages/Prescription/Prescription';
+import Prescription from './pages/Prescription/index';
 // import './App.css';
 function App() {
   return (

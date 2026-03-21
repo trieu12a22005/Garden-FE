@@ -9,18 +9,22 @@ const Examination = () => {
         page: 1,
         limit: 10,
     });
+    console.log("examinations:", examinations);
     const rows: ExaminationRow[] = examinations?.map((item:ExaminationTicket) => ({
         ticketID: item.ticketID,
         orderNum: item.orderNum,
         fullName: item.patient.account.fullName,
-        roomName: item.room.roomName,
+        roomName: "ABC",
+        DisplayID: item.patient.account.DisplayID,
         checkIn: item.checkIn,
         status: item.status,
         note: item.note,
         length: item.length,
         patientID: item.patientID,
+        genderDisplay: item.patient.account.genderDisplay,
+        address: item.patient.account.address,
     }));
-    console.log("rouws:" ,rows);
+    console.log("rows:" ,rows);
     return (
         <div>
              <WaitingRoom data = {rows} />

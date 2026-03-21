@@ -1,9 +1,4 @@
-export type PrescriptionMedicine = {
-  medicineName: string;
-  quantity: number;
-  usage: string;
-};
-
+import type { ColumnsType } from 'antd/es/table';
 export type PrescriptionPdfData = {
   name: string;
   phone: string;
@@ -16,5 +11,31 @@ export type PrescriptionPdfData = {
   symptom: string;
   diagnose: string;
   note: string;
-  medicines: PrescriptionMedicine[];
+  medicines: PrescriptionPdfMedicine[];
 };
+export type UsageItem = {
+  timeToTake?: string;
+  quantity?: number;
+  usage?: string;
+};
+
+export type PrescriptionMedicine = {
+  medicineId: number;
+  medicineName: string;
+  usages: UsageItem[];
+};
+export type PrescriptionPdfMedicine = {
+  medicineName: string;
+  quantity: number;
+  usage: string;
+};
+
+export type TableRow = {
+  key: number;
+  medicineId: number;
+  medicineName: string;
+  totalQuantity: number;
+  usagesText: string;
+};
+
+export type { ColumnsType };
