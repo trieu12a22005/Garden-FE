@@ -6,7 +6,7 @@ import RoleHome from './pages/RoleHome/RoleHome';
 import Examination from './pages/Examination/ExaminationForm';
 import Timetable from './pages/TimeTable';
 import GlobalLoading from './components/GlobalLoading';
-import Prescription from './pages/Prescription/Prescription';
+import Prescription from './pages/Prescription/index';
 // import './App.css';
 function App() {
   return (

@@ -28,6 +28,10 @@ export interface ExaminationTicket {
     patientID: string;
     account: {
       fullName: string;
+      DisplayID: string;
+      address: string;
+      phone: string;
+      genderDisplay: string;
     };
   };
   room: {
@@ -45,4 +49,7 @@ export interface ExaminationRow {
   note: string;
   length: number;
   patientID: string;
+  DisplayID: string;
+  address: string;
+  genderDisplay: string;
 }
