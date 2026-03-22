@@ -1,12 +1,12 @@
-import examinationApi from "@/apis/examination";
-import type { GetExaminationsParams } from "@/types/examinationType";
+import ticketApi from "@/apis/ticket";
+import type { EnterTicketParams } from "@/types/EnterTicket";
 import { useQuery } from "@tanstack/react-query";
 
-export const UseExamination = (params: GetExaminationsParams) => {
+export const UseExamination = (params: EnterTicketParams) => {
     const query = useQuery({
         queryKey: ['examinations', params],
         queryFn: async () => {
-            const res = await examinationApi.getExaminations(params);
+            const res = await ticketApi.getTicket(params);
             return res.data;
         }
     });

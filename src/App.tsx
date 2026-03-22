@@ -3,10 +3,10 @@ import Login from 'pages/login/Login';
 import MainLayout from 'components/layouts/MainLayout';
 import Portfolio from 'pages/portfolio';
 import RoleHome from './pages/RoleHome/RoleHome';
-import Examination from './pages/Examination/ExaminationForm';
 import Timetable from './pages/TimeTable';
 import GlobalLoading from './components/GlobalLoading';
 import Prescription from './pages/Prescription/index';
+import WaitingRoomPage from './pages/WaitingRoom';
 // import './App.css';
 function App() {
   return (
@@ -18,8 +18,8 @@ function App() {
           <Route index element={<Portfolio />}></Route>
           <Route path = "/role_home" element = {<RoleHome />} />
           <Route path='/timetable' element = {<Timetable/>} />
-          <Route path='/examination' element = {<Examination/>} />
-          <Route path='/prescription' element = {<Prescription/>} />
+          <Route path='/waiting-room' element = {<WaitingRoomPage/>} />
+          <Route path='/prescription/:id' element = {<Prescription/>} />
         </Route>
       </Routes>
     </>

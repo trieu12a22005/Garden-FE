@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
-import {Button, Col, DatePicker, Form, Input, InputNumber, Radio, Row, Select, Space, Table, message,} from 'antd';
-import { UsePrescription } from './usePrescription';
+import React, { useEffect, useState } from 'react';
+import {Button, Col, DatePicker, Form, Input, InputNumber, Radio, Row, Select, Space, Table} from 'antd';
+import { UsePostExamine, UsePrescription, UseTicketID } from './usePrescription';
 import type { Medicine } from '@/types/medicine';
 import { fullLayout, itemLayout } from './components/constant';
 import type { PrescriptionMedicine, TableRow, UsageItem } from '@/types/Prescription';
 import { getMedicineColumns } from './components/medicineColumns';
 import MedicineSection from './components/MedicineSection';
 import { buildPdfData, exportPrescriptionPdf } from './components/pdf';
+import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import dayjs from "dayjs";
+import type { PostExamineData } from '@/types/examine';
 const Prescription: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [form] = Form.useForm();
+  const { id } = useParams();
+  const {ticket} = UseTicketID(id || '');
+  console.log('ticket', ticket?.genderDisplay);
+    useEffect(() => {
+  if (ticket) {
+    form.setFieldsValue({
+      name: ticket.fullName,
+      gender: ticket.genderDisplay,
+      address: ticket.address,
+    });
+  }
+}, [ticket, form]);
   const [medicineList, setMedicineList] = useState<PrescriptionMedicine[]>([]);
   const { medicineOptions = [] } = UsePrescription(keyword);
   const medicineSelectOptions = medicineOptions.map((item: Medicine) => ({
@@ -22,25 +38,25 @@ const Prescription: React.FC = () => {
       const medicineId = form.getFieldValue('medicineId');
       const usages: UsageItem[] = form.getFieldValue('usages') || [];
       if (!medicineId) {
-        message.warning('Vui lòng chọn thuốc');
+        toast.error('Vui lòng chọn thuốc');
         return;
       }
       if (!usages.length) {
-        message.warning('Vui lòng thêm ít nhất 1 cách dùng');
+        toast.error('Vui lòng thêm ít nhất 1 cách dùng');
         return;
       }
       const hasEmptyUsage = usages.some(
         (item) => !item?.timeToTake || !item?.quantity || !item?.usage
       );
       if (hasEmptyUsage) {
-        message.warning('Vui lòng nhập đầy đủ các cách dùng');
+        toast.error('Vui lòng nhập đầy đủ các cách dùng');
         return;
       }
       const selectedMedicine = medicineOptions.find(
         (item: Medicine) => item.medicineID === medicineId
       );
       if (!selectedMedicine) {
-        message.error('Không tìm thấy thuốc đã chọn');
+        toast.error('Không tìm thấy thuốc đã chọn');
         return;
       }
       setMedicineList((prev) => [
@@ -56,9 +72,10 @@ const Prescription: React.FC = () => {
         usages: [{}],
       });
       setKeyword('');
-      message.success('Đã thêm thuốc vào danh sách');
+      toast.success('Đã thêm thuốc vào danh sách');
     } catch (error) {
       console.error(error);
+      toast.error('Có lỗi xảy ra khi thêm thuốc');
     }
   };
   const handleRemoveMedicine = (medicineIndex: number) => {
@@ -97,18 +114,31 @@ const handleExportPdf = async () => {
   });
   await exportPrescriptionPdf(pdfData);
 };
-  const onFinish = (values: Record<string, unknown>) => {
-    if (medicineList.length === 0) {
-      message.warning('Vui lòng thêm ít nhất 1 thuốc vào danh sách');
-      return;
-    }
-    const payload = {
-      ...values,
-      medicines: medicineList,
-    };
-    console.log('submit payload:', payload);
-    message.success('Lưu phiếu khám thành công');
+const { mutate } = UsePostExamine();
+
+const onFinish = (values: PostExamineData) => {
+  if (medicineList.length === 0) {
+    toast.error('Vui lòng thêm ít nhất 1 thuốc vào danh sách');
+    return;
+  }
+
+  const payload = {
+    ...values,
+    medicines: medicineList,
   };
+
+  mutate(payload, {
+    onSuccess: (data) => {
+      console.log('submit payload:', payload);
+      console.log('response:', data);
+      toast.success('Lưu phiếu khám thành công');
+    },
+    onError: (error) => {
+      console.error('Lỗi:', error);
+      toast.error('Lưu phiếu khám thất bại');
+    },
+  });
+};
   return (
     <div className="px-8 pb-8 mr-[6%]">
       <div className="mt-6 text-center text-2xl font-bold uppercase text-gray-700">
@@ -119,7 +149,7 @@ const handleExportPdf = async () => {
         layout="horizontal"
         style={{ width: '100%', marginTop: '50px' }}
         onFinish={onFinish}
-        initialValues={{ usages: [{}] }}
+        initialValues={{ name: ticket?.fullName, date: dayjs(),gender: ticket?.genderDisplay, address: ticket?.address }}
       >
         <Row gutter={16}>
           <Col span={12}>

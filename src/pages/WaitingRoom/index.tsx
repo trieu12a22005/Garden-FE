@@ -1,8 +1,8 @@
-import WaitingRoom from "@/components/WaitingRoom/Waitingroom";
+import ListWaitingRoom from "./component/Waitingroom";
 import { UseExamination } from "./UseExamination";
-import type { ExaminationRow, ExaminationTicket } from "@/types/examinationType";
+import type { EnterTicket, EnterTicketRow } from "@/types/EnterTicket";
 
-const Examination = () => {
+const WaitingRoomPage = () => {
     const { examinations } = UseExamination({
         roomID: "dd7a68c5-c2ca-47b0-95d1-c8584022028f",
         status: "pending",
@@ -10,7 +10,7 @@ const Examination = () => {
         limit: 10,
     });
     console.log("examinations:", examinations);
-    const rows: ExaminationRow[] = examinations?.map((item:ExaminationTicket) => ({
+    const rows:EnterTicketRow[] = examinations?.map((item:EnterTicket) => ({
         ticketID: item.ticketID,
         orderNum: item.orderNum,
         fullName: item.patient.account.fullName,
@@ -27,8 +27,8 @@ const Examination = () => {
     console.log("rows:" ,rows);
     return (
         <div>
-             <WaitingRoom data = {rows} />
+             <ListWaitingRoom data = {rows} />
         </div>
     );
 }
-export default Examination;
+export default WaitingRoomPage;

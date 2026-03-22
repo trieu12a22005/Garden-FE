@@ -22,7 +22,7 @@ const MedicineSection: React.FC<Props> = ({
             name="medicineId"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
-            rules={[{ required: true, message: 'Vui lòng chọn thuốc' }]}
+            rules={[{  message: 'Vui lòng chọn thuốc' }]}
           >
             <Select
               showSearch
@@ -53,7 +53,7 @@ const MedicineSection: React.FC<Props> = ({
                       name={[name, 'timeToTake']}
                       labelCol={{ span: 8 }}
                       wrapperCol={{ span: 16 }}
-                      rules={[{ required: true, message: 'Chọn thời gian' }]}
+                      rules={[{message: 'Chọn thời gian' }]}
                     >
                       <Select
                         placeholder="Chọn thời gian dùng"
@@ -70,7 +70,7 @@ const MedicineSection: React.FC<Props> = ({
                       name={[name, 'quantity']}
                       labelCol={{ span: 10 }}
                       wrapperCol={{ span: 14 }}
-                      rules={[{ required: true, message: 'Nhập số lượng' }]}
+                      rules={[{  message: 'Nhập số lượng' }]}
                     >
                       <InputNumber min={1} style={{ width: '100%' }} />
                     </Form.Item>
@@ -83,7 +83,7 @@ const MedicineSection: React.FC<Props> = ({
                       name={[name, 'usage']}
                       labelCol={{ span: 7 }}
                       wrapperCol={{ span: 17 }}
-                      rules={[{ required: true, message: 'Chọn cách dùng' }]}
+                      rules={[{  message: 'Chọn cách dùng' }]}
                     >
                       <Select
                         placeholder="Chọn cách dùng"
