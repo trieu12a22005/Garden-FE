@@ -25,6 +25,7 @@ function App() {
           <Route path='/pharmacy-queue' element={<PharmacyQueue />} />
           <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
           <Route path='/pharmacy-inventory' element={<PharmacyInventory />} />
+          <Route path='/prescription' element = {<Prescription/>} />
         </Route>
       </Routes>
     </>
