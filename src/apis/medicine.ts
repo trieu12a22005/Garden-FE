@@ -7,7 +7,6 @@ export interface MedicineTicket {
   orderNum: number | string;
   status: MedicineTicketStatus;
   prescriptionID: string;
-  roomID?: string;
   createdAt?: string;
 }
 
@@ -18,7 +17,6 @@ export interface MedicineTicketsResponse {
 
 export interface CreateMedicineTicketPayload {
   prescriptionID: string;
-  roomID: string;
 }
 
 export interface CreateMedicineTicketResponse {
@@ -331,7 +329,7 @@ class MedicineApi {
     return response.data;
   }
 
-  async getMedicineTickets(params?: { date?: string; roomId?: string }) {
+  async getMedicineTickets(params?: { date?: string }) {
     const response = await apiClient.get<MedicineTicketsResponse>(
       '/medicine/tickets',
       {
