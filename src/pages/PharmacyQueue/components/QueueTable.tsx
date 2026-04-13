@@ -25,7 +25,7 @@ interface QueueTableProps {
   onSearchChange: (value: string) => void;
   statusFilter: 'all' | DisplayStatus;
   onStatusFilterChange: (value: 'all' | DisplayStatus) => void;
-  onViewPrescription: (prescriptionDisplayID: string) => void;
+  onViewPrescription: (prescriptionID: string, ticketID: string) => void;
   onUpdateStatus?: (ticketID: string, status: TicketStatus) => void;
 }
 
@@ -119,7 +119,7 @@ const QueueTable = ({
                   <td className="px-3 py-4">
                     <div className="flex justify-end gap-2">
                       <button
-                        onClick={() => onViewPrescription(item.prescriptionDisplayID)}
+                        onClick={() => onViewPrescription(item.prescriptionID, item.ticketID)}
                         className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-gray-500 transition hover:border-blue-200 hover:text-blue-600"
                         title="Xem chi tiết"
                       >

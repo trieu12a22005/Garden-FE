@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import medicineApi, {
@@ -13,6 +13,7 @@ import CreateMedicineModal from './components/CreateMedicineModal';
 import EditMedicineModal from './components/EditMedicineModal';
 import ImportExportModal from './components/ImportExportModal';
 import ImexHistoryModal from './components/ImexHistoryModal';
+import Pagination from './components/Pagination';
 
 const MIN_STOCK = 100;
 
@@ -27,6 +28,8 @@ const PharmacyInventory = () => {
   // State
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'in-stock' | 'low-stock' | 'out-of-stock'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -40,22 +43,47 @@ const PharmacyInventory = () => {
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineItem | null>(null);
   const [importExportMode, setImportExportMode] = useState<'import' | 'export' | 'both'>('both');
 
-  // Fetch medicines using React Query
+  // Fetch medicines using React Query with pagination
   const {
-    data: medicines = [],
+    data: medicinesData,
     isLoading,
     error: queryError,
     refetch,
   } = useQuery({
-    queryKey: medicinesQueryKey,
+    queryKey: [...medicinesQueryKey, currentPage, search.trim()],
     queryFn: async () => {
-      const response = await medicineApi.getMedicineItems();
-      const meds = Array.isArray(response.data)
-        ? response.data
-        : response.data.medicines || response.data.items || [];
-      return meds as MedicineItem[];
+      const response = await medicineApi.getMedicineItems({
+        page: currentPage,
+        search: search.trim() || undefined,
+      });
+      return response.data;
     },
   });
+
+  // Reset to first page when search or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter]);
+
+  // Extract medicines and pagination info from response
+  const medicines = useMemo(() => {
+    if (!medicinesData) return [];
+    if (Array.isArray(medicinesData)) {
+      return medicinesData as MedicineItem[];
+    }
+    return (medicinesData.medicines || medicinesData.items || []) as MedicineItem[];
+  }, [medicinesData]);
+
+  const paginationInfo = useMemo(() => {
+    if (!medicinesData || Array.isArray(medicinesData)) {
+      return { page: 1, totalPages: 1, totalItems: medicines.length };
+    }
+    return {
+      page: medicinesData.page || 1,
+      totalPages: medicinesData.totalPages || 1,
+      totalItems: medicinesData.totalItems || medicines.length,
+    };
+  }, [medicinesData, medicines.length]);
 
   // Create medicines mutation
   const createMutation = useMutation({
@@ -63,6 +91,7 @@ const PharmacyInventory = () => {
       medicineApi.createManyMedicineItems(medicineData),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: medicinesQueryKey });
+      setCurrentPage(1); // Reset to first page after creating
       setIsCreateModalOpen(false);
 
       if (response.data.failedCount > 0) {
@@ -88,7 +117,7 @@ const PharmacyInventory = () => {
     mutationFn: ({ id, data }: { id: number; data: UpdateMedicineItemPayload }) =>
       medicineApi.updateMedicineItem(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: medicinesQueryKey });
+      queryClient.invalidateQueries({ queryKey: medicinesQueryKey, refetchType: 'active' });
       setIsEditModalOpen(false);
       toast.success('Cập nhật thuốc thành công!');
     },
@@ -102,7 +131,7 @@ const PharmacyInventory = () => {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => medicineApi.deleteMedicineItem(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: medicinesQueryKey });
+      queryClient.invalidateQueries({ queryKey: medicinesQueryKey, refetchType: 'active' });
       setIsDeleteConfirmOpen(false);
       setDeleteError(null);
       toast.success('Xóa thuốc thành công!');
@@ -133,7 +162,7 @@ const PharmacyInventory = () => {
         items,
       }),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: medicinesQueryKey });
+      queryClient.invalidateQueries({ queryKey: medicinesQueryKey, refetchType: 'active' });
       setIsImportExportModalOpen(false);
       toast.success(
         `${variables.type === 'import' ? 'Nhập' : 'Xuất'} thuốc thành công!`,
@@ -404,17 +433,29 @@ const PharmacyInventory = () => {
         </div>
 
         {/* Medicine Table */}
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <MedicineTable
-            medicines={filteredMedicines}
-            onEdit={(med) => {
-              setSelectedMedicine(med);
-              setIsEditModalOpen(true);
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="p-5">
+            <MedicineTable
+              medicines={filteredMedicines}
+              onEdit={(med) => {
+                setSelectedMedicine(med);
+                setIsEditModalOpen(true);
+              }}
+              onDelete={handleDeleteClick}
+              onImport={handleImportClick}
+              onExport={handleExportClick}
+              minStock={MIN_STOCK}
+            />
+          </div>
+          <Pagination
+            currentPage={paginationInfo.page}
+            totalPages={paginationInfo.totalPages}
+            totalItems={paginationInfo.totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            onDelete={handleDeleteClick}
-            onImport={handleImportClick}
-            onExport={handleExportClick}
-            minStock={MIN_STOCK}
           />
         </div>
       </div>

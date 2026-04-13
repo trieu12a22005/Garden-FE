@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { QueueStatus } from './data';
 import type { MedicineTicket } from '@/apis/medicineTicket';
+
+type QueueStatus = 'waiting' | 'dispensed';
 import { getMedicineTickets, createMedicineTicket, updateMedicineTicketStatus } from '@/apis/medicineTicket';
 import CurrentQueueCard from './components/CurrentQueueCard';
 import QueueSummary from './components/QueueSummary';
@@ -79,8 +80,8 @@ const PharmacyQueue = () => {
     });
   }, [tickets, search, statusFilter]);
 
-  const handleViewPrescription = (prescriptionDisplayID: string) => {
-    navigate(`/pharmacy-queue/${prescriptionDisplayID}`);
+  const handleViewPrescription = (prescriptionID: string, ticketID: string) => {
+    navigate(`/pharmacy-queue/${prescriptionID}?ticketId=${ticketID}`);
   };
 
   const handleCreateTicket = () => {
@@ -91,14 +92,14 @@ const PharmacyQueue = () => {
     createTicketMutation.mutate(prescriptionInput.trim());
   };
 
-  const handleUpdateStatus = (prescriptionDisplayID: string, status: 'pending' | 'done') => {
-    // Tìm ticket theo prescriptionDisplayID để lấy ticketID
-    const ticket = tickets.find((t: MedicineTicket) => t.prescriptionDisplayID === prescriptionDisplayID);
+  const handleUpdateStatus = (prescriptionID: string, status: 'pending' | 'done') => {
+    // Tìm ticket theo prescriptionID để lấy ticketID
+    const ticket = tickets.find((t: MedicineTicket) => t.prescriptionID === prescriptionID);
     if (ticket) {
       // Note: API cần ticketID nhưng response của getMedicineTickets không trả về ticketID
       // Cần lưu ý backend để trả về ticketID trong response
-      // Tạm thời dùng prescriptionDisplayID thay thế
-      updateStatusMutation.mutate({ ticketID: prescriptionDisplayID, status });
+      // Tạm thời dùng prescriptionID thay thế
+      updateStatusMutation.mutate({ ticketID: prescriptionID, status });
     }
   };
 

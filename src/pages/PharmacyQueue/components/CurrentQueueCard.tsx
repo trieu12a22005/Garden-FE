@@ -2,7 +2,7 @@ import type { MedicineTicket } from '@/apis/medicineTicket';
 
 interface CurrentQueueCardProps {
   currentItem: MedicineTicket;
-  onViewPrescription: (prescriptionDisplayID: string) => void;
+  onViewPrescription: (prescriptionID: string, ticketID: string) => void;
 }
 
 const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardProps) => {
@@ -29,7 +29,7 @@ const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardP
             Gọi số
           </button>
           <button
-            onClick={() => onViewPrescription(currentItem.prescriptionDisplayID)}
+            onClick={() => onViewPrescription(currentItem.prescriptionID, currentItem.ticketID)}
             className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -39,7 +39,7 @@ const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardP
             Xem đơn
           </button>
           <button
-            onClick={() => onViewPrescription(currentItem.prescriptionDisplayID)}
+            onClick={() => onViewPrescription(currentItem.prescriptionID, currentItem.ticketID)}
             className="inline-flex items-center gap-2 rounded-lg bg-[#1867c0] px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2}>

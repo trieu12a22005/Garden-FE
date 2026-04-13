@@ -22,7 +22,9 @@ interface CreateMedicineTicketResponse {
 
 /**
  * Loại dữ liệu cho phản hồi lấy danh sách medicine ticket
- * @property prescriptionDisplayID - Mã đơn thuốc hiển thị
+ * @property ticketID - ID duy nhất của vé (UUID)
+ * @property prescriptionID - ID của đơn thuốc (UUID) - dùng cho API calls và navigation
+ * @property prescriptionDisplayID - Mã đơn thuốc hiển thị - dùng cho hiển thị giao diện
  * @property patientName - Tên bệnh nhân
  * @property orderNum - Số thứ tự của vé trong hàng chờ
  * @property status - Trạng thái vé (pending hoặc done)
@@ -30,6 +32,8 @@ interface CreateMedicineTicketResponse {
  * @property createdAt - Thời gian tạo vé
  */
 export interface MedicineTicket {
+  ticketID: string;
+  prescriptionID: string;
   prescriptionDisplayID: string;
   patientName: string;
   orderNum: number;
@@ -154,6 +158,65 @@ export const updateMedicineTicketStatus = async (
     `/medicine/tickets/${ticketID}/status`,
     {
       status,
+    }
+  );
+  return response.data;
+};
+
+/**
+ * Loại dữ liệu cho phản hồi xuất thuốc theo vé thuốc
+ * @property ticketID - ID duy nhất của vé (UUID)
+ * @property status - Trạng thái vé (done)
+ * @property prescriptionID - ID của đơn thuốc (UUID)
+ * @property prescriptionDisplayID - Mã đơn thuốc hiển thị
+ * @property imexID - ID của phiếu xuất thuốc (UUID)
+ */
+interface DispenseMedicineResponse {
+  message: string;
+  data: {
+    ticketID: string;
+    status: "done";
+    prescriptionID: string;
+    prescriptionDisplayID: string;
+    imexID: string;
+  };
+}
+
+/**
+ * Xuất thuốc cho một vé thuốc (Dispense Medicine)
+ *
+ * @description
+ * Xuất thuốc cho một medicine ticket.
+ * - Hệ thống sẽ kiểm tra tồn kho của toàn bộ thuốc trong prescription tương ứng
+ * - Nếu đủ tồn kho, hệ thống sẽ tạo phiếu xuất thuốc, trừ tồn kho, cập nhật medicine ticket và prescription sang `done`
+ * - Nếu thiếu thuốc, request sẽ bị từ chối và không có thay đổi nào được ghi vào database
+ * - Chỉ nhà dược mới có thể truy cập endpoint này
+ *
+ * @param ticketID - ID của vé thuốc cần xuất (UUID, bắt buộc)
+ * @returns Promise<DispenseMedicineResponse> - Đối tượng chứa thông tin xuất thuốc thành công
+ * @throws Error - 400: Invalid ticket id hoặc insufficient stock
+ * @throws Error - 401: Unauthorized (missing or invalid access token)
+ * @throws Error - 403: Forbidden (only pharmacists can access this endpoint)
+ * @throws Error - 404: Medicine ticket hoặc prescription không tìm thấy
+ * @throws Error - 409: Medicine ticket hoặc prescription đã hoàn thành
+ * @throws Error - 500: Server error
+ *
+ * @example
+ * const response = await dispenseMedicine("550e8400-e29b-41d4-a716-446655440000");
+ * console.log(response.data.ticketID); // UUID của vé
+ * console.log(response.data.status); // "done"
+ * console.log(response.data.imexID); // UUID của phiếu xuất thuốc
+ */
+export const dispenseMedicine = async (
+  ticketID: string
+): Promise<DispenseMedicineResponse> => {
+  const response = await apiClient.post<DispenseMedicineResponse>(
+    "/medicine/tickets/dispense",
+    {},
+    {
+      params: {
+        id: ticketID,
+      },
     }
   );
   return response.data;
