@@ -1,8 +1,8 @@
-import type { QueueItem } from '../data';
+import type { MedicineTicket } from '@/apis/medicineTicket';
 
 interface CurrentQueueCardProps {
-  currentItem: QueueItem;
-  onViewPrescription: (prescriptionId: string) => void;
+  currentItem: MedicineTicket;
+  onViewPrescription: (prescriptionDisplayID: string) => void;
 }
 
 const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardProps) => {
@@ -12,12 +12,12 @@ const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardP
         <div className="flex items-center gap-5">
           <div className="flex h-20 w-24 flex-col items-center justify-center rounded-2xl bg-[#1867c0] text-white">
             <span className="text-xs uppercase tracking-wide">Số hiện tại</span>
-            <span className="text-2xl font-bold">{currentItem.queueNumber}</span>
+            <span className="text-2xl font-bold">{String(currentItem.orderNum).padStart(3, '0')}</span>
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">{currentItem.patientName}</h3>
-            <p className="text-sm text-gray-500">Mã BN: {currentItem.patientCode}</p>
-            <p className="text-sm text-gray-500">BS kê đơn: {currentItem.doctorName}</p>
+            <p className="text-sm text-gray-500">Mã đơn thuốc: {currentItem.prescriptionDisplayID}</p>
+            <p className="text-sm text-gray-500">Phòng: {currentItem.roomName}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-3">
@@ -29,7 +29,7 @@ const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardP
             Gọi số
           </button>
           <button
-            onClick={() => onViewPrescription(currentItem.prescriptionId)}
+            onClick={() => onViewPrescription(currentItem.prescriptionDisplayID)}
             className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -39,7 +39,7 @@ const CurrentQueueCard = ({ currentItem, onViewPrescription }: CurrentQueueCardP
             Xem đơn
           </button>
           <button
-            onClick={() => onViewPrescription(currentItem.prescriptionId)}
+            onClick={() => onViewPrescription(currentItem.prescriptionDisplayID)}
             className="inline-flex items-center gap-2 rounded-lg bg-[#1867c0] px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2}>
