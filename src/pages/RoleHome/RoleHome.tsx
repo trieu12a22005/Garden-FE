@@ -72,12 +72,6 @@ const RoleHome = () => {
             path: '/medical-records'
         },
         {
-            id: 3,
-            title: 'Kê đơn thuốc & Dược phẩm - PHA.03',
-            description: 'Tạo đơn thuốc mới, kiểm tra tương tác thuốc và tra cứu tồn kho.',
-            path: '/prescriptions'
-        },
-        {
             id: 4,
             title: 'Quản lý hàng đợi phát thuốc - PHA.01',
             description: 'Theo dõi hàng đợi, xem đơn thuốc và xác nhận phát thuốc cho bệnh nhân.',
