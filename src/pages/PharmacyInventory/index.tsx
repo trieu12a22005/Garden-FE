@@ -26,7 +26,8 @@ const PharmacyInventory = () => {
   const queryClient = useQueryClient();
 
   // State
-  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState(''); // Input value
+  const [searchQuery, setSearchQuery] = useState(''); // Actual search query (only updated on Enter/button click)
   const [statusFilter, setStatusFilter] = useState<'all' | 'in-stock' | 'low-stock' | 'out-of-stock'>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
@@ -50,20 +51,20 @@ const PharmacyInventory = () => {
     error: queryError,
     refetch,
   } = useQuery({
-    queryKey: [...medicinesQueryKey, currentPage, search.trim()],
+    queryKey: [...medicinesQueryKey, currentPage, searchQuery.trim()],
     queryFn: async () => {
       const response = await medicineApi.getMedicineItems({
         page: currentPage,
-        search: search.trim() || undefined,
+        search: searchQuery.trim() || undefined,
       });
       return response.data;
     },
   });
 
-  // Reset to first page when search or filter changes
+  // Reset to first page when search query or filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, statusFilter]);
+  }, [searchQuery, statusFilter]);
 
   // Extract medicines and pagination info from response
   const medicines = useMemo(() => {
@@ -177,26 +178,20 @@ const PharmacyInventory = () => {
     },
   });
 
-  // Filtered medicines
+  // Filtered medicines (only status filter on client-side, search is handled by API)
   const filteredMedicines = useMemo(() => {
-    const normalized = search.trim().toLowerCase();
+    if (statusFilter === 'all') return medicines;
+
     return medicines.filter((item) => {
-      const matchesSearch =
-        normalized.length === 0 ||
-        item.medicineName.toLowerCase().includes(normalized) ||
-        item.description?.toLowerCase().includes(normalized);
-
-      if (statusFilter === 'all') return matchesSearch;
-
       const status =
         item.quantity === 0
           ? 'out-of-stock'
           : item.quantity < MIN_STOCK
             ? 'low-stock'
             : 'in-stock';
-      return matchesSearch && status === statusFilter;
+      return status === statusFilter;
     });
-  }, [medicines, search, statusFilter]);
+  }, [medicines, statusFilter]);
 
   // Stats
   const stats = useMemo(() => {
@@ -257,6 +252,19 @@ const PharmacyInventory = () => {
     }, 0);
 
     imexMutation.mutate({ type, items, totalValue, note });
+  };
+
+  // Handle search trigger (Enter or button click)
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+    setCurrentPage(1);
+  };
+
+  // Handle Enter key in search input
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   if (isLoading) {
@@ -349,7 +357,7 @@ const PharmacyInventory = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalTypes}</p>
+                <p className="text-2xl font-bold text-gray-900">{paginationInfo.totalItems}</p>
                 <p className="text-sm text-gray-500">Loại thuốc</p>
               </div>
             </div>
@@ -401,34 +409,58 @@ const PharmacyInventory = () => {
         {/* Filters */}
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="relative flex-1 max-w-md">
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Tìm kiếm thuốc..."
-                className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
-              />
-              <svg
-                viewBox="0 0 24 24"
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
+            <div className="relative flex-1 max-w-md flex gap-2">
+              <div className="relative flex-1">
+                <input
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder="Tìm kiếm thuốc..."
+                  className="w-full rounded-lg border border-gray-200 py-2.5 pl-10 pr-3 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
+                />
+                <svg
+                  viewBox="0 0 24 24"
+                  className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.3-4.3" />
+                  <circle cx="11" cy="11" r="7" />
+                </svg>
+              </div>
+              <button
+                onClick={handleSearch}
+                className="flex h-[42px] w-[42px] items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
+                title="Tìm kiếm"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.3-4.3" />
-                <circle cx="11" cy="11" r="7" />
-              </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.3-4.3" />
+                  <circle cx="11" cy="11" r="7" />
+                </svg>
+              </button>
             </div>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
-              className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
-            >
-              <option value="all">Tất cả trạng thái</option>
-              <option value="in-stock">Còn hàng</option>
-              <option value="low-stock">Sắp hết</option>
-              <option value="out-of-stock">Hết hàng</option>
-            </select>
+            <div className="flex items-center gap-2">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+                className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="all">Tất cả trạng thái</option>
+                <option value="in-stock">Còn hàng</option>
+                <option value="low-stock">Sắp hết</option>
+                <option value="out-of-stock">Hết hàng</option>
+              </select>
+              {statusFilter !== 'all' && (
+                <span className="text-xs text-amber-600">Lọc trên trang hiện tại</span>
+              )}
+            </div>
           </div>
         </div>
 
