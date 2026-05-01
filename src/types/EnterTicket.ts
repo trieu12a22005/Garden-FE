@@ -16,6 +16,7 @@ export interface EnterTicket {
   length?: number;
   patient: {
     patientID: string;
+    previousRecord: string;
     account: {
       fullName: string;
       DisplayID: string;
@@ -30,6 +31,7 @@ export interface EnterTicket {
   };
 }
 export interface EnterTicketRow {
+  appointmentID: string;
   ticketID: string;
   orderNum: number;
   fullName: string;
@@ -42,4 +44,5 @@ export interface EnterTicketRow {
   DisplayID: string;
   address: string;
   genderDisplay: string;
+  previousRecord: string;
 }

@@ -7,6 +7,7 @@ import Timetable from './pages/TimeTable';
 import GlobalLoading from './components/GlobalLoading';
 import Prescription from './pages/Prescription/index';
 import WaitingRoomPage from './pages/WaitingRoom';
+import PatientHistory from './pages/PatientHistory/index';
 // import './App.css';
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/timetable' element = {<Timetable/>} />
           <Route path='/waiting-room' element = {<WaitingRoomPage/>} />
           <Route path='/prescription/:id' element = {<Prescription/>} />
+          <Route path='/patient-history/:id' element = {<PatientHistory/>} />
         </Route>
       </Routes>
     </>

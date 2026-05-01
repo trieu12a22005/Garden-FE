@@ -1,6 +1,7 @@
 import type { EnterTicket, EnterTicketRow } from "@/types/EnterTicket";
 export const mapEnterTicketRow = (item: EnterTicket): EnterTicketRow => ({
   ticketID: item.ticketID,
+  appointmentID: item.appointmentID,
   orderNum: item.orderNum,
   fullName: item.patient.account.fullName,
   roomName: "ABC",
@@ -12,6 +13,7 @@ export const mapEnterTicketRow = (item: EnterTicket): EnterTicketRow => ({
   patientID: item.patientID,
   genderDisplay: item.patient.account.genderDisplay,
   address: item.patient.account.address,
+  previousRecord: item.patient.previousRecord,
 });
 
 export const mapEnterTicketRows = (items: EnterTicket[]): EnterTicketRow[] =>
