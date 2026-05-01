@@ -4,6 +4,9 @@ import MainLayout from 'components/layouts/MainLayout';
 import Portfolio from 'pages/portfolio';
 import RoleHome from './pages/RoleHome/RoleHome';
 import Timetable from './pages/TimeTable';
+import PharmacyQueue from './pages/PharmacyQueue';
+import PrescriptionDetail from './pages/PharmacyQueue/PrescriptionDetail';
+import PharmacyInventory from './pages/PharmacyInventory';
 import GlobalLoading from './components/GlobalLoading';
 import Prescription from './pages/Prescription/index';
 import WaitingRoomPage from './pages/WaitingRoom';
@@ -22,6 +25,11 @@ function App() {
           <Route path='/waiting-room' element = {<WaitingRoomPage/>} />
           <Route path='/prescription/:id' element = {<Prescription/>} />
           <Route path='/patient-history/:id' element = {<PatientHistory/>} />
+          <Route path='/examination' element = {<Examination/>} />
+          <Route path='/pharmacy-queue' element={<PharmacyQueue />} />
+          <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
+          <Route path='/pharmacy-inventory' element={<PharmacyInventory />} />
+          <Route path='/prescription' element = {<Prescription/>} />
         </Route>
       </Routes>
     </>
