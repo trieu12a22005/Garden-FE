@@ -3,13 +3,14 @@ import Login from 'pages/login/Login';
 import MainLayout from 'components/layouts/MainLayout';
 import Portfolio from 'pages/portfolio';
 import RoleHome from './pages/RoleHome/RoleHome';
-import Examination from './pages/Examination/ExaminationForm';
 import Timetable from './pages/TimeTable';
 import PharmacyQueue from './pages/PharmacyQueue';
 import PrescriptionDetail from './pages/PharmacyQueue/PrescriptionDetail';
 import PharmacyInventory from './pages/PharmacyInventory';
 import GlobalLoading from './components/GlobalLoading';
 import Prescription from './pages/Prescription/index';
+import WaitingRoomPage from './pages/WaitingRoom';
+import PatientHistory from './pages/PatientHistory/index';
 // import './App.css';
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
           <Route index element={<Portfolio />}></Route>
           <Route path = "/role_home" element = {<RoleHome />} />
           <Route path='/timetable' element = {<Timetable/>} />
+          <Route path='/waiting-room' element = {<WaitingRoomPage/>} />
+          <Route path='/prescription/:id' element = {<Prescription/>} />
+          <Route path='/patient-history/:id' element = {<PatientHistory/>} />
           <Route path='/examination' element = {<Examination/>} />
           <Route path='/pharmacy-queue' element={<PharmacyQueue />} />
           <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />

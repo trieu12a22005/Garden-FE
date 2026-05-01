@@ -88,7 +88,7 @@ const RoleHome = () => {
             id: 6,
             title: 'Phiếu khám bệnh',
             description: 'ghi kết quả khám bệnh, chẩn đoán và kế hoạch điều trị cho bệnh nhân',
-            path: '/examination'
+            path: '/waiting-room'
         }
     ];
 
