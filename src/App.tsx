@@ -11,25 +11,27 @@ import GlobalLoading from './components/GlobalLoading';
 import Prescription from './pages/Prescription/index';
 import WaitingRoomPage from './pages/WaitingRoom';
 import PatientHistory from './pages/PatientHistory/index';
+import Profile from './pages/Profile/Profile';
 // import './App.css';
 function App() {
   return (
     <>
-    <GlobalLoading />
+      <GlobalLoading />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route index element={<Portfolio />}></Route>
-          <Route path = "/role_home" element = {<RoleHome />} />
-          <Route path='/timetable' element = {<Timetable/>} />
-          <Route path='/waiting-room' element = {<WaitingRoomPage/>} />
-          <Route path='/prescription/:id' element = {<Prescription/>} />
-          <Route path='/patient-history/:id' element = {<PatientHistory/>} />
-          <Route path='/examination' element = {<Examination/>} />
+          <Route path="/role_home" element={<RoleHome />} />
+          <Route path='/timetable' element={<Timetable />} />
+          <Route path='/waiting-room' element={<WaitingRoomPage />} />
+          <Route path='/prescription/:id' element={<Prescription />} />
+          <Route path='/patient-history/:id' element={<PatientHistory />} />
+          {/* <Route path='/examination' element = {<Examination/>} /> */}
           <Route path='/pharmacy-queue' element={<PharmacyQueue />} />
           <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
           <Route path='/pharmacy-inventory' element={<PharmacyInventory />} />
-          <Route path='/prescription' element = {<Prescription/>} />
+          <Route path='/prescription' element={<Prescription />} />
         </Route>
       </Routes>
     </>
