@@ -12,6 +12,7 @@ import Prescription from './pages/Prescription/index';
 import WaitingRoomPage from './pages/WaitingRoom';
 import PatientHistory from './pages/PatientHistory/index';
 import Profile from './pages/Profile/Profile';
+import AppointmentPage from './pages/Appointment';
 // import './App.css';
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
           <Route path='/pharmacy-inventory' element={<PharmacyInventory />} />
           <Route path='/prescription' element={<Prescription />} />
+          <Route path='/appointment' element={<AppointmentPage />} />
         </Route>
       </Routes>
     </>
