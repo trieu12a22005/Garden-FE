@@ -5,12 +5,14 @@ type DelayedLoadingProps = {
   loading: boolean;
   minDuration?: number;
   fadeDuration?: number;
+  msg?: string;
 };
 
 const DelayedLoading = ({
   loading,
   minDuration = 700,
   fadeDuration = 300,
+  msg = "Đang tải dữ liệu",
 }: DelayedLoadingProps) => {
   const [mounted, setMounted] = useState(false);
   const [show, setShow] = useState(false);
@@ -83,9 +85,7 @@ const DelayedLoading = ({
         style={{ transitionDuration: `${fadeDuration}ms` }}
       >
         <PulseLoader color="#3B82F6" size={15} />
-        <p className="text-blue-500 font-medium animate-pulse">
-          Đang tải dữ liệu...
-        </p>
+        <p className="text-blue-500 font-medium animate-pulse">{msg}</p>
       </div>
     </div>
   );

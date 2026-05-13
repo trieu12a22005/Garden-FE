@@ -5,7 +5,7 @@ import usePermission from "../../hooks/usePermission";
 import { useEffect, useMemo } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import useTriggerInput from "../../hooks/useTriggerInput";
-
+import { DownOutlined, UpOutlined } from "@ant-design/icons";
 type PermissionItem = Permission;
 
 type PermissionRow = PermissionItem & {
@@ -44,8 +44,8 @@ const groupPermissions = (permissions: PermissionItem[]): PermissionRow[] => {
       ...permission,
     });
   });
-  console.log("Grouped:", groupMap);
-  console.log("Rows:", rows);
+  // console.log("Grouped:", groupMap);
+  // console.log("Rows:", rows);
   return rows;
 };
 
@@ -122,17 +122,8 @@ function PermissionList() {
                   if (!record.children?.length) {
                     return <span className="inline-block w-7" />;
                   }
-
-                  return (
-                    <button
-                      type="button"
-                      aria-label={expanded ? "Collapse group" : "Expand group"}
-                      onClick={(event) => onExpand(record, event)}
-                      className={record.isGroup ? styles.expandButtonGroup : styles.expandButtonChild}
-                    >
-                      <span className="text-sm font-semibold leading-none">{expanded ? "-" : "+"}</span>
-                    </button>
-                  );
+                  if (expanded) return <UpOutlined />;
+                  return <DownOutlined />;
                 },
               }}
               rowSelection={{

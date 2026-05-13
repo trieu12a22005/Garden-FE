@@ -2,6 +2,9 @@ import { Table } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import type { RoleRow } from "@/types/role";
 import useRole from "../../hooks/useRole";
+import { useCallback } from "react";
+import useStore from "@/store/useStore";
+import { notifyError } from "@/utils/notify";
 
 const styles = {
   table: `
@@ -44,6 +47,15 @@ function RoleCompactList() {
     },
   ];
 
+  const hasInput = useStore((state) => state.behaviour?.form?.hasInput);
+  const viewRolePage = useCallback(
+    (id: string) => {
+      if (!hasInput) navigate(`/role/details/${id}`);
+      else notifyError("Bạn phải hoàn thành mọi thay đổi trước khi rời đi");
+    },
+    [hasInput, navigate]
+  );
+
   return (
     <div className="bg-transparent/80 backdrop-blur">
       {data && (
@@ -59,7 +71,7 @@ function RoleCompactList() {
             onClick: (event) => {
               event.preventDefault();
               event.stopPropagation();
-              navigate(`/role/details/${record.roleID}`);
+              viewRolePage(record.roleID);
             },
           })}
           rowSelection={{ type: "radio", renderCell: () => null, selectedRowKeys: id ? [id] : undefined }}

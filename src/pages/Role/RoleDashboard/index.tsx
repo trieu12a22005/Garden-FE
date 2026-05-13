@@ -1,8 +1,11 @@
+import useStore from "@/store/useStore";
+import ConfirmDeleteRoleModal from "../components/modal";
 import RoleTable from "../components/table";
 import { usePrefetchPermission } from "../hooks/usePermission";
 
 function RoleDashboardPage() {
   usePrefetchPermission();
+  const open = useStore((state) => state.behaviour.modal.open);
   return (
     <div className="max-w-[1000px] mx-auto">
       <div className=" role-dashboard__hero p-[18px] rounded-3xl bg-amber-600 grid gap-[12px] text-white border-2 border-amber-700 mb-8">
@@ -12,7 +15,7 @@ function RoleDashboardPage() {
           các chức năng của hệ thống.
         </p>
       </div>
-
+      <ConfirmDeleteRoleModal open={open} />
       <RoleTable />
     </div>
   );

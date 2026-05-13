@@ -2,26 +2,36 @@ import { Input, Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Controller, useFormContext } from "react-hook-form";
 import useTriggerInput from "../hooks/useTriggerInput";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 function RoleDisplay() {
   useEffect(() => {
     console.log("Mounted role dp");
   }, []);
   const triggerSavePromptHandler = useTriggerInput();
-  const { control, setValue } = useFormContext();
+  const { control, setValue, clearErrors } = useFormContext();
+
+  const inputRoleNameHandler = useCallback(() => {
+    clearErrors("roleName");
+    triggerSavePromptHandler();
+  }, [clearErrors, triggerSavePromptHandler]);
+  const inputRoleDescriptionHandler = useCallback(() => {
+    clearErrors("roleDescription");
+    triggerSavePromptHandler();
+  }, [clearErrors, triggerSavePromptHandler]);
+
   return (
     <div className="grid gap-4">
       <Controller
         control={control}
         name="roleName"
-        render={({ field }) => {
+        render={({ field, fieldState }) => {
           const { value } = field;
-
+          const { error } = fieldState;
           return (
-            <>
-              <div className="flex gap-[18px] items-center">
-                <p className="text-[18px] inline-block  shrink-0">
+            <div>
+              <div className="flex gap-[18px] items-center mb-2">
+                <p className="text-[18px] w-[100px] inline-block  shrink-0">
                   <span>Code * </span>
                   <Tooltip title="Mã của vai trò viết bằng tiếng Anh">
                     <QuestionCircleOutlined />
@@ -36,19 +46,21 @@ function RoleDisplay() {
                   style={{ fontSize: 18 }}
                 />
               </div>
-            </>
+              {error && <p>{error.message}</p>}
+            </div>
           );
         }}
       />
       <Controller
         control={control}
         name="roleDescription"
-        render={({ field }) => {
+        render={({ field, fieldState }) => {
+          const { error } = fieldState;
           const { value } = field;
           return (
-            <>
-              <div className="flex gap-[18px] items-center">
-                <span className="text-[18px] inline-block  shrink-0">Tên vai trò </span>
+            <div>
+              <div className="flex gap-[18px] items-center mb-2">
+                <span className="text-[18px] w-[100px] inline-block  shrink-0">Tên vai trò </span>
                 <Input
                   value={value}
                   onChange={(x) => {
@@ -58,7 +70,8 @@ function RoleDisplay() {
                   style={{ fontSize: 18 }}
                 />
               </div>
-            </>
+              {error && <p>{error.message}</p>}
+            </div>
           );
         }}
       />

@@ -6,11 +6,13 @@ import RoleDisplay from "./Display";
 import { Tabs, type TabsProps } from "antd";
 import RolePermissions from "./Permissions";
 import { useEffect, useMemo, useReducer, useRef } from "react";
-import WarningChanges from "../WarningChanges";
+import WarningChanges from "../components/WarningChanges";
 import { EditRoleBehaviorContext } from "../context/behaviour";
 import type { RoleRow } from "@/types/role";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { roleSchema } from "../schema";
 
-interface EditRolePageProps {
+export interface EditRolePageProps {
   mode?: "edit" | "new";
 }
 
@@ -21,6 +23,7 @@ function EditRolePage({ mode = "edit" }: EditRolePageProps) {
 
   const { data: role } = useRole(targetID as string);
   const form = useForm({
+    resolver: zodResolver(roleSchema),
     defaultValues: mode === "edit" ? role : undefined,
   });
   const roleRef = useRef<RoleRow | undefined>(undefined);
@@ -91,7 +94,7 @@ function EditRolePage({ mode = "edit" }: EditRolePageProps) {
       {
         key: "3",
         label: "Quản lý thành viên",
-        children: "Content of Tab Pane 3",
+        children: "In development",
       },
     ];
   }, [form]);
@@ -111,8 +114,9 @@ function EditRolePage({ mode = "edit" }: EditRolePageProps) {
           items={roleDetailsTabList}
           defaultActiveKey="1"
         />
+
         <FormProvider {...form}>
-          <WarningChanges />
+          <WarningChanges mode={mode} />
         </FormProvider>
       </div>
     </EditRoleBehaviorContext.Provider>

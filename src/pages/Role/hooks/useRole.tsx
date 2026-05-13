@@ -11,8 +11,10 @@ key code, id: details of
 function useRole(): UseQueryResult<RoleRow[], Error>;
 function useRole(id: string): UseQueryResult<RoleRow, Error>;
 function useRole(id?: string) {
+  // _ is for all, and id is for specific items
+  const identifier = typeof id === "string" ? id : "_";
   const _ = useQuery<RoleRow[] | RoleRow | undefined>({
-    queryKey: ["role", id],
+    queryKey: ["role", identifier],
     queryFn: async () => {
       if (!id) {
         return await RoleAPI.getRolesList();
