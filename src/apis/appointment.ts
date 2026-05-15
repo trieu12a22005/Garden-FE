@@ -51,6 +51,7 @@ export interface AppointmentFaculty {
 export interface AppointmentRoom {
   roomID?: string;
   roomName?: string;
+  faculty?: AppointmentFaculty;
   [key: string]: unknown;
 }
 
@@ -74,7 +75,6 @@ export interface AppointmentItem {
   scheduleDate: string;
   appointmentType?: AppointmentType | string;
   patient?: AppointmentPatient;
-  faculty?: AppointmentFaculty;
   room?: AppointmentRoom | null;
   approvedByStaff?: AppointmentStaff | null;
   [key: string]: unknown;

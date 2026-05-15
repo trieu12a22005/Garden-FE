@@ -14,6 +14,15 @@ import DeleteAppointmentModal from './components/DeleteAppointmentModal';
 
 type StatusFilter = 'all' | AppointmentStatus;
 
+const getTodayDateString = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
 const getPatientName = (appointment: AppointmentItem) => {
   const firstName = appointment.patient?.account?.firstName?.trim() ?? '';
   const lastName = appointment.patient?.account?.lastName?.trim() ?? '';
@@ -24,6 +33,7 @@ const AppointmentPage = () => {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [selectedDate, setSelectedDate] = useState(() => getTodayDateString());
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedAppointmentToDelete, setSelectedAppointmentToDelete] =
     useState<AppointmentItem | null>(null);
@@ -33,8 +43,11 @@ const AppointmentPage = () => {
     isLoading: isAppointmentsLoading,
     isError: isAppointmentsError,
   } = useQuery({
-    queryKey: ['appointments'],
-    queryFn: () => appointmentApi.getAppointments(),
+    queryKey: ['appointments', selectedDate],
+    queryFn: () => appointmentApi.getAppointments({ scheduleDate: selectedDate }),
+    meta: {
+      suppressGlobalLoading: true,
+    },
   });
 
   const {
@@ -135,6 +148,16 @@ const AppointmentPage = () => {
     deleteAppointmentMutation.mutate(selectedAppointmentToDelete.appointmentID);
   };
 
+  const handleSelectedDateChange = (value: string) => {
+    setSelectedDate(value || getTodayDateString());
+  };
+
+  const handleResetToToday = () => {
+    setSelectedDate(getTodayDateString());
+  };
+
+  const shouldShowResetToToday = selectedDate !== getTodayDateString();
+
   return (
     <div className="min-h-screen bg-[#f6f8fb] py-8 font-sans text-gray-800">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-6 px-4 sm:px-6 lg:px-8">
@@ -161,16 +184,17 @@ const AppointmentPage = () => {
           <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             Không thể tải danh sách lịch hẹn. Vui lòng thử lại.
           </div>
-        ) : isAppointmentsLoading ? (
-          <div className="rounded-2xl border border-gray-200 bg-white px-4 py-10 text-center text-sm text-gray-500 shadow-sm">
-            Đang tải danh sách lịch hẹn...
-          </div>
         ) : (
           <AppointmentTable
             items={filteredAppointments}
             displayedCount={filteredAppointments.length}
+            isLoading={isAppointmentsLoading}
             search={search}
             onSearchChange={setSearch}
+            selectedDate={selectedDate}
+            shouldShowResetToToday={shouldShowResetToToday}
+            onSelectedDateChange={handleSelectedDateChange}
+            onResetToToday={handleResetToToday}
             statusFilter={statusFilter}
             onStatusFilterChange={setStatusFilter}
             onDelete={handleDelete}

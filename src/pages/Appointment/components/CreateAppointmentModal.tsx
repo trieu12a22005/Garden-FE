@@ -56,6 +56,9 @@ const CreateAppointmentModal = ({
     queryKey: ['rooms', values.facultyID],
     queryFn: () => roomApi.getRoomsByFaculty(values.facultyID),
     enabled: open && Boolean(values.facultyID),
+    meta: {
+      suppressGlobalLoading: true,
+    },
   });
 
   useEffect(() => {

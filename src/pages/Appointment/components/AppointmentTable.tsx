@@ -70,7 +70,7 @@ const formatDateTime = (value?: string) => {
 const getPatientName = (appointment: AppointmentItem) => {
   const firstName = appointment.patient?.account?.firstName?.trim() ?? '';
   const lastName = appointment.patient?.account?.lastName?.trim() ?? '';
-  return [firstName, lastName].filter(Boolean).join(' ') || '--';
+  return [lastName, firstName].filter(Boolean).join(' ') || '--';
 };
 
 const getAppointmentTypeLabel = (appointmentType?: AppointmentItem['appointmentType']) => {
@@ -99,8 +99,13 @@ const getDepositBadge = (depositStatus?: AppointmentDepositStatus) => {
 interface AppointmentTableProps {
   items: AppointmentItem[];
   displayedCount: number;
+  isLoading: boolean;
   search: string;
   onSearchChange: (value: string) => void;
+  selectedDate: string;
+  shouldShowResetToToday: boolean;
+  onSelectedDateChange: (value: string) => void;
+  onResetToToday: () => void;
   statusFilter: DisplayStatusFilter;
   onStatusFilterChange: (value: DisplayStatusFilter) => void;
   onDelete: (appointment: AppointmentItem) => void;
@@ -110,13 +115,20 @@ interface AppointmentTableProps {
 const AppointmentTable = ({
   items,
   displayedCount,
+  isLoading,
   search,
   onSearchChange,
+  selectedDate,
+  shouldShowResetToToday,
+  onSelectedDateChange,
+  onResetToToday,
   statusFilter,
   onStatusFilterChange,
   onDelete,
   isDeleting,
 }: AppointmentTableProps) => {
+  const skeletonRows = Array.from({ length: 5 });
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-4 border-b border-gray-100 pb-4 md:flex-row md:items-center md:justify-between">
@@ -127,6 +139,23 @@ const AppointmentTable = ({
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(event) => onSelectedDateChange(event.target.value)}
+              className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
+            />
+            {shouldShowResetToToday ? (
+              <button
+                type="button"
+                onClick={onResetToToday}
+                className="rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-blue-200 hover:text-blue-600"
+              >
+                Hôm nay
+              </button>
+            ) : null}
+          </div>
           <div className="relative">
             <input
               value={search}
@@ -176,7 +205,39 @@ const AppointmentTable = ({
             </tr>
           </thead>
           <tbody className="text-gray-700">
-            {items.length === 0 ? (
+            {isLoading ? (
+              skeletonRows.map((_, index) => (
+                <tr key={`skeleton-${index}`} className="border-t border-gray-100">
+                  <td className="px-3 py-4">
+                    <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-4 w-32 animate-pulse rounded bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-4 w-20 animate-pulse rounded bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-4 w-24 animate-pulse rounded bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-6 w-20 animate-pulse rounded-full bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-6 w-24 animate-pulse rounded-full bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="h-4 w-28 animate-pulse rounded bg-gray-200" />
+                  </td>
+                  <td className="px-3 py-4">
+                    <div className="ml-auto h-8 w-8 animate-pulse rounded-full bg-gray-200" />
+                  </td>
+                </tr>
+              ))
+            ) : items.length === 0 ? (
               <tr>
                 <td colSpan={9} className="px-3 py-10 text-center text-sm text-gray-500">
                   Chưa có lịch hẹn nào phù hợp.
@@ -208,7 +269,7 @@ const AppointmentTable = ({
                       {appointment.room?.roomName ?? '--'}
                     </td>
                     <td className="px-3 py-4 text-gray-600">
-                      {appointment.faculty?.facultyName ?? '--'}
+                      {appointment?.room?.faculty?.facultyName ?? '--'}
                     </td>
                     <td className="px-3 py-4">
                       <span
