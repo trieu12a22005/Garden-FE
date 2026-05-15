@@ -16,6 +16,7 @@ import RoleDashboardPage from "./pages/Role/RoleDashboard";
 import RoleLayout from "./pages/Role/layout";
 import EditRolePage from "./pages/Role/EditRole";
 import EditRoleLayout from "./pages/Role/EditRole/Layout";
+import AppointmentPage from './pages/Appointment';
 // import './App.css';
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
               <Route path=":id" element={<EditRolePage />} />
             </Route>
           </Route>
+          <Route path='/appointment' element={<AppointmentPage />} />
         </Route>
       </Routes>
     </>

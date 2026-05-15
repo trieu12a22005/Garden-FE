@@ -89,6 +89,12 @@ const RoleHome = () => {
             title: 'Phiếu khám bệnh',
             description: 'ghi kết quả khám bệnh, chẩn đoán và kế hoạch điều trị cho bệnh nhân',
             path: '/waiting-room'
+        },
+        {
+            id: 7,
+            title: 'Quản lý lịch hẹn khám bệnh',
+            description: 'Xem lịch hẹn khám bệnh của bệnh nhân, xác nhận hoặc hủy lịch hẹn',
+            path: '/appointment'
         }
     ];
 
