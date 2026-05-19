@@ -1,36 +1,23 @@
-import { Avatar, Calendar, Collapse, theme } from 'antd';
+import { UseAuth } from '@/AuthContext';
+import { useNotifications, useMarkNotificationRead } from './useRoleHome';
+import { Avatar, Calendar, Collapse, Spin, theme } from 'antd';
+import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 const RoleHome = () => {
-    // 1. Dữ liệu User
-    const user = {
-        name: 'Huỳnh Phạm Long Triều',
-        role: 'doctor',
-        avatar: 'https://www.shutterstock.com/image-vector/male-doctor-smiling-happy-face-600nw-2481032615.jpg',
-    };
-    // 2. Danh sách thông báo
-    const announcements = [
-        {
-            id: 1,
-            title: 'Bảo trì hệ thống Lịch (SCH.01)',
-            date: '08/03/2026',
-            content: 'Hệ thống sẽ tạm ngưng để bảo trì từ 22:00 đến 23:30. Vui lòng sắp xếp công việc.',
-            isNew: true,
-        },
-        {
-            id: 2,
-            title: 'Quy định kê đơn điện tử',
-            date: '05/03/2026',
-            content: 'Yêu cầu điền đầy đủ mã ICD-10 khi xuất đơn thuốc bắt đầu từ tuần sau.',
-            isNew: false,
-        },
-        {
-            id: 3,
-            title: 'Nghỉ lễ Giỗ Tổ',
-            date: '01/03/2026',
-            content: 'Phòng khám nghỉ lễ vào 10/3 Âm lịch. Kiểm tra lại lịch trực cấp cứu.',
-            isNew: false,
-        }
-    ];
+    const { user } = UseAuth();
+
+    // Thông báo — lấy từ API
+    const { notifications, isLoading: notiLoading } = useNotifications();
+    const markRead = useMarkNotificationRead();
+
+    const announcements = notifications.map((n) => ({
+        id: n.id,
+        title: n.title,
+        date: dayjs(n.createdAt).format('DD/MM/YYYY'),
+        content: n.description ?? '',
+        link: n.link ?? null,
+        isNew: !n.isRead,
+    }));
 
     const announcementItems = announcements.map((item) => ({
         key: item.id.toString(),
@@ -51,9 +38,19 @@ const RoleHome = () => {
             </div>
         ),
         children: (
-            <p className="text-xs text-gray-600 leading-relaxed m-0 px-2 border-l-2 border-[#1867c0] ml-1">
-                {item.content}
-            </p>
+            <div>
+                <p className="text-xs text-gray-600 leading-relaxed m-0 px-2 border-l-2 border-[#1867c0] ml-1">
+                    {item.content}
+                </p>
+                {item.link && (
+                    <a
+                        href={item.link}
+                        className="text-xs text-[#1867c0] hover:underline mt-1 ml-3 inline-block"
+                    >
+                        Xem chi tiết →
+                    </a>
+                )}
+            </div>
         ),
     }));
 
@@ -89,6 +86,24 @@ const RoleHome = () => {
             title: 'Phiếu khám bệnh',
             description: 'ghi kết quả khám bệnh, chẩn đoán và kế hoạch điều trị cho bệnh nhân',
             path: '/waiting-room'
+        },
+        {
+            id: 7,
+            title: "Quản lý thông báo",
+            description: "Quản lý thông báo",
+            path: "/notification"
+        },
+        {
+            id: 8,
+            title: "Quản lý tài khoản",
+            description: "Quản lý tài khoản",
+            path: "/account"
+        },
+        {
+            id: 9,
+            title: "Báo cáo",
+            description: "Báo cáo",
+            path: "/report"
         }
     ];
 
@@ -101,9 +116,9 @@ const RoleHome = () => {
         backgroundColor: '#ffffff',
     };
     const navigate = useNavigate()
-    const handleClick = (path:string) =>{
+    const handleClick = (path: string) => {
         navigate(path);
-        
+
     }
     return (
         <div className="min-h-screen bg-white pb-12 font-sans text-gray-800">
@@ -125,31 +140,45 @@ const RoleHome = () => {
 
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 mt-4 mb-8">
                 <div className="flex items-center gap-4">
-                    <Avatar size={64} src={user.avatar} className="border border-gray-200" />
+                    <Avatar size={64} src={user?.avatar || 'https://www.shutterstock.com/image-vector/male-doctor-smiling-happy-face-600nw-2481032615.jpg'} className="border border-gray-200" />
                     <div>
                         <h1 className="text-xl text-gray-800 font-semibold">
-                            Chào mừng quay trở lại, Bác sĩ {user.name}! 👋
+                            Chào mừng quay trở lại, {user?.role} {user?.firstName + ' ' + user?.lastName}! 👋
                         </h1>
-                        <p className="text-[#1867c0] text-sm capitalize">{user.role}</p>
+                        <p className="text-[#1867c0] text-sm capitalize">{user?.role}</p>
                     </div>
                 </div>
             </div>
 
             {/* ================= BỐ CỤC 3 CỘT (Thông báo - Chức năng - Lịch) CÙNG MỘT HÀNG ================= */}
             <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 grid grid-cols-1 xl:grid-cols-12 gap-6">
-                
+
                 {/* CỘT 1: Thông báo (Chiếm 3/12) */}
                 <div className="xl:col-span-3">
                     <h2 className="text-lg text-gray-700 font-bold mb-4 border-b pb-2 border-gray-200">
                         Thông báo hệ thống
                     </h2>
                     <div className="rounded-md shadow-sm border border-gray-200 overflow-hidden bg-white">
-                        <Collapse 
-                            items={announcementItems} 
-                            defaultActiveKey={['1']} 
-                            ghost 
-                            expandIconPosition="start"
-                        />
+                        {notiLoading ? (
+                            <div className="flex justify-center py-8">
+                                <Spin />
+                            </div>
+                        ) : announcements.length === 0 ? (
+                            <p className="text-sm text-gray-400 text-center py-6">Không có thông báo nào.</p>
+                        ) : (
+                            <Collapse
+                                items={announcementItems}
+                                ghost
+                                expandIconPosition="start"
+                                onChange={(keys) => {
+                                    // Khi mở một thông báo chưa đọc → đánh dấu đã đọc
+                                    const lastKey = Array.isArray(keys) ? keys[keys.length - 1] : keys;
+                                    if (!lastKey) return;
+                                    const target = announcements.find((a) => a.id === lastKey);
+                                    if (target?.isNew) markRead.mutate(lastKey as string);
+                                }}
+                            />
+                        )}
                     </div>
                 </div>
 
@@ -160,18 +189,18 @@ const RoleHome = () => {
                     </h2>
                     <div className="space-y-4">
                         {systemFeatures.map((feature) => (
-                            <div 
-                                key={feature.id} 
+                            <div
+                                key={feature.id}
                                 className="rounded-md border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
-                                onClick ={() => handleClick(feature.path)}
+                                onClick={() => handleClick(feature.path)}
                             >
                                 <h3 className="text-lg sm:text-[20px] font-bold text-[#0066cc] mb-2 cursor-pointer hover:underline leading-tight">
                                     {feature.title}
                                 </h3>
-                                
+
                                 <div className="text-sm text-gray-800 space-y-1">
                                     <p>
-                                        <strong className="font-semibold text-gray-900">Mô tả: </strong> 
+                                        <strong className="font-semibold text-gray-900">Mô tả: </strong>
                                         <span className="text-gray-600">{feature.description}</span>
                                     </p>
                                     {feature.access && (
@@ -192,7 +221,7 @@ const RoleHome = () => {
                         <h2 className="text-lg font-bold mb-4 text-gray-700 border-b pb-2 border-transparent">
                             Lịch
                         </h2>
-                        
+
                         <div style={wrapperStyle}>
                             <Calendar fullscreen={false} />
                         </div>

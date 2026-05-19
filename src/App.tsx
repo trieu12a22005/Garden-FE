@@ -12,6 +12,9 @@ import Prescription from './pages/Prescription/index';
 import WaitingRoomPage from './pages/WaitingRoom';
 import PatientHistory from './pages/PatientHistory/index';
 import Profile from './pages/Profile/Profile';
+import Notification from './pages/Notification/Notification';
+import ManageAccount from './pages/ManageAccount/ManageAccount';
+import Report from './pages/Report/Report';
 // import './App.css';
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
           <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
           <Route path='/pharmacy-inventory' element={<PharmacyInventory />} />
           <Route path='/prescription' element={<Prescription />} />
+          <Route path='/notification' element={<Notification />} />
+          <Route path='/account' element={<ManageAccount />} />
+          <Route path='/report' element={<Report />} />
         </Route>
       </Routes>
     </>

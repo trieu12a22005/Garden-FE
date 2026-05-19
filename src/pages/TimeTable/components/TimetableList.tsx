@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTimetable } from "../useTimetable";
 import FacultyService from "@/services/facultyService";
 import FacultyFilter from "./FacultyFilter";
@@ -11,11 +11,27 @@ export interface WeekDay {
     label: string;
     date: string;
 }
-const TimetableList = ({ doctorId }: { doctorId: string }) => {
-    const { timetables, isError, error } = useTimetable(doctorId);
+const TimetableList = ({ accountID }: { accountID: string }) => {
+    const { timetables, isError, error } = useTimetable(accountID);
     const { faculties = [] } = FacultyService();
     const [activeTab, setActiveTab] = useState<string>('CÁ NHÂN');
     const [activeFacultyId, setActiveFacultyId] = useState<string | null>(null);
+
+    // Group timetables by roomID → mỗi phòng 1 row, không cần API riêng
+    const roomRows = useMemo(() => {
+        if (!timetables) return [];
+        const map = new Map<string, { roomID: string; roomName: string; facultyName?: string }>();
+        timetables.forEach((t) => {
+            if (!map.has(t.roomID)) {
+                map.set(t.roomID, {
+                    roomID: t.roomID,
+                    roomName: t.room.roomName,
+                    facultyName: t.room.faculty?.facultyName,
+                });
+            }
+        });
+        return Array.from(map.values());
+    }, [timetables]);
     const tabs: string[] = ['CÁ NHÂN', 'TOÀN BỆNH VIỆN'];
     const weekDays: WeekDay[] = [
         { key: 'mon', label: 'Thứ 2', date: '02-03-2026' },
@@ -108,33 +124,43 @@ const TimetableList = ({ doctorId }: { doctorId: string }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {timetables?.map((room) => (
-                                <tr key={room.roomID} className="h-[200px]">
-                                    <td className="border border-gray-300 font-bold p-2 align-middle">
-                                        <div className="text-lg">{room.room.roomName}</div>
-                                        <div className="text-xs font-normal mt-2 text-gray-500">{room.room.faculty?.facultyName}</div>
+                            {roomRows.length === 0 ? (
+                                <tr>
+                                    <td colSpan={8} className="border border-gray-300 text-center p-8 text-gray-400">
+                                        Không có lịch làm việc trong tuần này
                                     </td>
-                                    {weekDays.map((day) => {
-                                        const schedule = room.dayOfWeek;
-                                        if (schedule == day.key) {
-                                            return (
-                                                <td key={day.key} className={`border border-gray-300 p-3 align-top text-left transition-colors cursor-pointer `}>
-                                                    <div className="font-bold text-left mt-[20px] text-[#6495ED]">
-                                                        {room.note}
-                                                    </div>
-                                                    <hr className="my-1 border-gray-300" />
-                                                    <div className="text-xs">
-                                                        <p className="font-bold text-left font-semibold mt-[10px]">
-                                                            <span>BS: </span>{room.doctor.account.firstName} {room.doctor.account.lastName}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                            );
-                                        }
-                                        return <td key={day.key} className="border border-gray-300 p-3"></td>;
-                                    })}
                                 </tr>
-                            ))}
+                            ) : (
+                                roomRows.map((room) => (
+                                    <tr key={room.roomID} className="h-[200px]">
+                                        <td className="border border-gray-300 font-bold p-2 align-middle">
+                                            <div className="text-lg">{room.roomName}</div>
+                                            <div className="text-xs font-normal mt-2 text-gray-500">{room.facultyName}</div>
+                                        </td>
+                                        {weekDays.map((day) => {
+                                            const entry = timetables?.find(
+                                                (t) => t.roomID === room.roomID && t.dayOfWeek === day.key
+                                            );
+                                            if (entry) {
+                                                return (
+                                                    <td key={day.key} className="border border-gray-300 p-3 align-top text-left transition-colors cursor-pointer">
+                                                        <div className="font-bold text-left mt-[20px] text-[#6495ED]">
+                                                            {entry.note}
+                                                        </div>
+                                                        <hr className="my-1 border-gray-300" />
+                                                        <div className="text-xs">
+                                                            <p className="font-bold text-left font-semibold mt-[10px]">
+                                                                <span>BS: </span>{entry.account.firstName} {entry.account.lastName}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                );
+                                            }
+                                            return <td key={day.key} className="border border-gray-300 p-3"></td>;
+                                        })}
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
