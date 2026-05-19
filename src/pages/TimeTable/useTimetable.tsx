@@ -2,14 +2,14 @@
 import timeTableApi from '@/apis/timetable';
 import type { TimetableResponse } from '@/types/timetableType';
 import { useQuery } from '@tanstack/react-query';
-export const useTimetable = (doctorId: string) => {
+export const useTimetable = (accountID: string) => {
     const query = useQuery({
-        queryKey: ['timetables', doctorId],
+        queryKey: ['timetables', accountID],
         queryFn: async () => {
-            const res = await timeTableApi.getTimetable(doctorId);
+            const res = await timeTableApi.getTimetable(accountID);
             return res.timetables as TimetableResponse[];
         },
-        enabled: !!doctorId,
+        enabled: !!accountID,
     });
     return {
         timetables: query.data,

@@ -1,3 +1,20 @@
+import { Route, Routes } from 'react-router-dom';
+import Login from 'pages/login/Login';
+import MainLayout from 'components/layouts/MainLayout';
+import Portfolio from 'pages/portfolio';
+import RoleHome from './pages/RoleHome/RoleHome';
+import Timetable from './pages/TimeTable';
+import PharmacyQueue from './pages/PharmacyQueue';
+import PrescriptionDetail from './pages/PharmacyQueue/PrescriptionDetail';
+import PharmacyInventory from './pages/PharmacyInventory';
+import GlobalLoading from './components/GlobalLoading';
+import Prescription from './pages/Prescription/index';
+import WaitingRoomPage from './pages/WaitingRoom';
+import PatientHistory from './pages/PatientHistory/index';
+import Profile from './pages/Profile/Profile';
+import Notification from './pages/Notification/Notification';
+import ManageAccount from './pages/ManageAccount/ManageAccount';
+import Report from './pages/Report/Report';
 import { Route, Routes } from "react-router-dom";
 import Login from "pages/login/Login";
 import MainLayout from "components/layouts/MainLayout";
@@ -33,6 +50,13 @@ function App() {
           <Route path="/prescription/:id" element={<Prescription />} />
           <Route path="/patient-history/:id" element={<PatientHistory />} />
           {/* <Route path='/examination' element = {<Examination/>} /> */}
+          <Route path='/pharmacy-queue' element={<PharmacyQueue />} />
+          <Route path='/pharmacy-queue/:prescriptionId' element={<PrescriptionDetail />} />
+          <Route path='/pharmacy-inventory' element={<PharmacyInventory />} />
+          <Route path='/prescription' element={<Prescription />} />
+          <Route path='/notification' element={<Notification />} />
+          <Route path='/account' element={<ManageAccount />} />
+          <Route path='/report' element={<Report />} />
           <Route path="/pharmacy-queue" element={<PharmacyQueue />} />
           <Route path="/pharmacy-queue/:prescriptionId" element={<PrescriptionDetail />} />
           <Route path="/pharmacy-inventory" element={<PharmacyInventory />} />
