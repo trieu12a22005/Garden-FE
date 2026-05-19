@@ -91,11 +91,6 @@ function EditRolePage({ mode = "edit" }: EditRolePageProps) {
           </FormProvider>
         ),
       },
-      {
-        key: "3",
-        label: "Quản lý thành viên",
-        children: "In development",
-      },
     ];
   }, [form]);
 

@@ -1,14 +1,3 @@
-import { apiClient } from './axios';
-
-class RoleApi {
-    async getRoles() {
-        const response = await apiClient.get('/admin/role');
-        return response.data;
-    }
-}
-
-const roleApi = new RoleApi();
-export default roleApi;
 import type { RoleRow } from "@/types/role";
 import { apiClient } from "./axios";
 class RoleAPI {
