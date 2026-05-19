@@ -104,6 +104,9 @@ const RoleHome = () => {
             title: "Báo cáo",
             description: "Báo cáo",
             path: "/report"
+            title: 'Quản lý lịch hẹn khám bệnh',
+            description: 'Xem lịch hẹn khám bệnh của bệnh nhân, xác nhận hoặc hủy lịch hẹn',
+            path: '/appointment'
         }
     ];
 
