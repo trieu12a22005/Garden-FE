@@ -1,18 +1,31 @@
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClientProvider } from '@tanstack/react-query'
-import App from './App'
-import { queryClient } from './lib/queryClient'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
+import App from './App';
 import './index.css';
-import { Toaster } from 'react-hot-toast'
-import { AuthProvider } from './AuthContext'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, staleTime: 30_000 },
+  },
+});
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <BrowserRouter>
-      <App />
-      <Toaster />
+  <React.StrictMode>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <App />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: { borderRadius: 10, background: '#1a6e1a', color: '#fff' },
+            success: { style: { background: '#2ea82e' } },
+            error: { style: { background: '#b71c1c' } },
+          }}
+        />
+      </QueryClientProvider>
     </BrowserRouter>
-    </AuthProvider>
-  </QueryClientProvider>
-)
+  </React.StrictMode>
+);
