@@ -1,1 +1,83 @@
-@import "tailwindcss";
+/* Garden Dashboard – Design Token */
+:root {
+  --green-50:  #f0faf0;
+  --green-100: #d4f0d4;
+  --green-200: #a8e0a8;
+  --green-300: #6dca6d;
+  --green-400: #4ab84a;
+  --green-500: #2ea82e; /* primary */
+  --green-600: #228a22;
+  --green-700: #1a6e1a;
+  --green-800: #114911;
+  --green-900: #0a2d0a;
+
+  --sidebar-bg: #1a6e1a;
+  --sidebar-text: #d4f0d4;
+  --sidebar-hover: #228a22;
+  --sidebar-active: #4ab84a;
+  --header-bg: #ffffff;
+  --content-bg: #f0faf0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--content-bg);
+  color: #1a2e1a;
+}
+
+/* Ant Design token overrides */
+.ant-layout-sider {
+  background: var(--sidebar-bg) !important;
+}
+
+.ant-menu-dark {
+  background: var(--sidebar-bg) !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: var(--sidebar-active) !important;
+}
+
+.ant-menu-dark .ant-menu-item:hover {
+  background-color: var(--sidebar-hover) !important;
+}
+
+.ant-btn-primary {
+  background-color: var(--green-500) !important;
+  border-color: var(--green-500) !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: var(--green-600) !important;
+  border-color: var(--green-600) !important;
+}
+
+.stat-card {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 2px 12px rgba(46,168,46,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46,168,46,0.15);
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--green-800);
+  margin-bottom: 20px;
+}
+
+.garden-tag-seed      { color: #795548; background: #efebe9; border-color: #a1887f; }
+.garden-tag-sprout    { color: #2e7d32; background: #e8f5e9; border-color: #81c784; }
+.garden-tag-growing   { color: #1565c0; background: #e3f2fd; border-color: #64b5f6; }
+.garden-tag-budding   { color: #6a1b9a; background: #f3e5f5; border-color: #ba68c8; }
+.garden-tag-blooming  { color: #e65100; background: #fff3e0; border-color: #ffb74d; }
+.garden-tag-resting   { color: #455a64; background: #eceff1; border-color: #90a4ae; }
+.garden-tag-needs_care{ color: #b71c1c; background: #ffebee; border-color: #ef9a9a; }
+.garden-tag-completed { color: #1b5e20; background: #e8f5e9; border-color: #4caf50; }
