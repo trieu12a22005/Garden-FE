@@ -1,8 +1,9 @@
-import { Row, Col, Card, Statistic, Table, Typography, Space } from 'antd';
+import { Row, Col, Card, Statistic, Table, Typography, Select, Space } from 'antd';
 import {
   UserOutlined, TeamOutlined, EnvironmentOutlined,
   AppstoreOutlined, HeartOutlined, PictureOutlined,
 } from '@ant-design/icons';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { gardenApi } from '../../apis/garden';
 import { realPlantApi } from '../../apis/realPlant';
@@ -17,9 +18,20 @@ export default function AdminDashboard() {
   const { data: plantsData } = useQuery({ queryKey: ['all-real-plants'], queryFn: () => realPlantApi.getAll() });
   const { data: flowersData } = useQuery({ queryKey: ['flower-types'], queryFn: () => flowerTypeApi.getAll() });
 
+  const [gardenFilter, setGardenFilter] = useState<string | null>(null);
+  const [flowerFilter, setFlowerFilter] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
   const gardens = gardensData?.data ?? [];
-  const plants = plantsData?.data ?? [];
+  const allPlants = plantsData?.data ?? [];
   const flowers = flowersData?.data ?? [];
+
+  const plants = allPlants.filter((p: any) => {
+    if (gardenFilter && p.gardenId !== gardenFilter) return false;
+    if (flowerFilter && p.flowerTypeId !== flowerFilter) return false;
+    if (statusFilter && p.status !== statusFilter) return false;
+    return true;
+  });
 
   const statCards = [
     { title: 'Tổng số vườn', value: gardens.length, icon: <EnvironmentOutlined />, color: '#2ea82e' },
@@ -41,6 +53,43 @@ export default function AdminDashboard() {
   return (
     <div>
       <Title level={4} className="page-title">🌿 Tổng quan hệ thống</Title>
+
+      <Card style={{ marginBottom: 24, borderRadius: 12 }}>
+        <Space wrap>
+          <Select
+            allowClear
+            placeholder="Tất cả các vườn"
+            style={{ width: 220 }}
+            options={gardens.map((g: any) => ({ value: g.id, label: g.name }))}
+            onChange={setGardenFilter}
+            value={gardenFilter}
+          />
+          <Select
+            allowClear
+            placeholder="Tất cả loại hoa"
+            style={{ width: 200 }}
+            options={flowers.map((f: any) => ({ value: f.id, label: f.name }))}
+            onChange={setFlowerFilter}
+            value={flowerFilter}
+          />
+          <Select
+            allowClear
+            placeholder="Tất cả trạng thái"
+            style={{ width: 180 }}
+            options={[
+              { value: 'SEED', label: 'Hạt giống' },
+              { value: 'SPROUT', label: 'Nảy mầm' },
+              { value: 'GROWING', label: 'Đang lớn' },
+              { value: 'BUDDING', label: 'Ra nụ' },
+              { value: 'BLOOMING', label: 'Nở hoa' },
+              { value: 'NEEDS_CARE', label: 'Cần chăm sóc' },
+              { value: 'COMPLETED', label: 'Hoàn thành' },
+            ]}
+            onChange={setStatusFilter}
+            value={statusFilter}
+          />
+        </Space>
+      </Card>
 
       <Row gutter={[16, 16]} style={{ marginBottom: 28 }}>
         {statCards.map((s) => (

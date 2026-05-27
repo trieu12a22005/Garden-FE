@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import viVN from 'antd/locale/vi_VN';
 
 // Auth
 import LoginPage from './pages/login/Login';
+import { configureAuthInterceptors } from './apis/axios';
+import authApi from './apis/auth';
+import { useAuthStore } from './store/authStore';
 
 // Layouts
 import AdminLayout from './layouts/AdminLayout';
@@ -30,6 +34,7 @@ import AdminGardens from './pages/admin/Gardens';
 import AdminFlowerTypes from './pages/admin/FlowerTypes';
 import AdminCareTasks from './pages/admin/CareTasks';
 import AdminPlantUpdates from './pages/admin/PlantUpdates';
+import AdminVirtualPlants from './pages/admin/VirtualPlants';
 
 const antdTheme = {
   token: {
@@ -42,6 +47,18 @@ const antdTheme = {
 };
 
 function App() {
+  const logout = useAuthStore((s) => s.logout);
+
+  useEffect(() => {
+    configureAuthInterceptors({
+      refreshAccessToken: () => authApi.refreshToken(),
+      onAuthFailure: () => {
+        logout();
+        window.location.href = '/login';
+      },
+    });
+  }, [logout]);
+
   return (
     <ConfigProvider locale={viVN} theme={antdTheme}>
       <Routes>
@@ -88,6 +105,7 @@ function App() {
           <Route path="flower-types" element={<AdminFlowerTypes />} />
           <Route path="care-tasks" element={<AdminCareTasks />} />
           <Route path="plant-updates" element={<AdminPlantUpdates />} />
+          <Route path="virtual-plants" element={<AdminVirtualPlants />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

@@ -17,7 +17,10 @@ export interface Garden {
   description?: string;
   imageUrl?: string;
   isActive: boolean;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  rejectedReason?: string;
   farmerId: string;
+  farmer?: Pick<User, 'id' | 'fullName' | 'email'>;
   createdAt: string;
   updatedAt: string;
   realPlants?: RealPlant[];
@@ -25,13 +28,22 @@ export interface Garden {
 
 export type PlantStatus = 'SEED' | 'SPROUT' | 'GROWING' | 'BUDDING' | 'BLOOMING' | 'RESTING' | 'NEEDS_CARE' | 'COMPLETED';
 
+export type ResourceType = 'WATER' | 'SUNLIGHT' | 'FERTILIZER' | 'AIR' | 'LOVE' | 'DEW';
+export type VerifyType = 'SELF_CONFIRM' | 'TIMER' | 'OPTIONAL_PHOTO';
+export type CareTaskType = 'WATER_PLANT' | 'BREATHING' | 'DRINK_WATER' | 'WRITE_JOURNAL' | 'LISTEN_SOUND' | 'SHORT_WALK';
+
 export interface FlowerType {
   id: string;
   name: string;
   description?: string;
   imageUrl?: string;
   defaultDuration?: number;
+  stageImages?: Partial<Record<PlantStatus, string>>;
+  stageDurations?: Partial<Record<PlantStatus, number>>;
+  availableCount?: number;
+  gardens?: Array<{ id: string; name: string; address?: string }>;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface RealPlant {
@@ -68,23 +80,22 @@ export interface VirtualPlant {
   status: PlantStatus;
   growthPoint: number;
   streakCount: number;
+  waterAmount: number;
+  sunlightAmount: number;
+  fertilizerAmount: number;
+  airAmount: number;
+  loveAmount: number;
+  dewAmount: number;
+  lastCaredAt?: string;
   userId: string;
+  user?: Pick<User, 'id' | 'fullName' | 'email'>;
   flowerTypeId: string;
   flowerType?: FlowerType;
   realPlantId: string;
   realPlant?: RealPlant;
   createdAt: string;
+  updatedAt: string;
 }
-
-export interface MoodJournal {
-  id: string;
-  userId: string;
-  mood: 'VERY_BAD' | 'BAD' | 'NORMAL' | 'GOOD' | 'VERY_GOOD';
-  note?: string;
-  createdAt: string;
-}
-
-export type CareTaskType = 'WATER_PLANT' | 'BREATHING' | 'DRINK_WATER' | 'WRITE_JOURNAL' | 'LISTEN_SOUND' | 'SHORT_WALK';
 
 export interface CareTask {
   id: string;
@@ -93,6 +104,21 @@ export interface CareTask {
   type: CareTaskType;
   isDefault: boolean;
   isActive: boolean;
+  rewardResource: ResourceType;
+  rewardAmount: number;
+  growthReward: number;
+  verifyType: VerifyType;
+  durationSeconds?: number;
+  characterImageUrl?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MoodJournal {
+  id: string;
+  userId: string;
+  mood: 'VERY_BAD' | 'BAD' | 'NORMAL' | 'GOOD' | 'VERY_GOOD';
+  note?: string;
   createdAt: string;
 }
 

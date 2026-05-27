@@ -3,7 +3,7 @@ import {
   DashboardOutlined, TeamOutlined, EnvironmentOutlined,
   AppstoreOutlined, PictureOutlined, UserOutlined,
   LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
-  BellOutlined, SettingOutlined,
+  BellOutlined, SettingOutlined, HeartOutlined, ExperimentOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -17,18 +17,30 @@ const { Text } = Typography;
 const adminMenuItems = [
   { key: '/admin/dashboard', icon: <DashboardOutlined />, label: 'Tổng quan' },
   {
-    key: 'users', icon: <TeamOutlined />, label: 'Người dùng',
+    key: 'users-group', icon: <TeamOutlined />, label: 'Người dùng',
     children: [
       { key: '/admin/users', label: 'Tất cả người dùng' },
       { key: '/admin/farmers', label: 'Nhà vườn' },
     ],
   },
-  { key: '/admin/gardens', icon: <EnvironmentOutlined />, label: 'Vườn' },
-  { key: '/admin/flower-types', icon: <AppstoreOutlined />, label: 'Loại hoa' },
-  { key: '/admin/real-plants', icon: <AppstoreOutlined />, label: 'Cây thật' },
-  { key: '/admin/plant-updates', icon: <PictureOutlined />, label: 'Cập nhật cây' },
-  { key: '/admin/care-tasks', icon: <SettingOutlined />, label: 'Nhiệm vụ chăm sóc' },
+  {
+    key: 'plant-group', icon: <EnvironmentOutlined />, label: 'Cây & Vườn',
+    children: [
+      { key: '/admin/gardens', label: '🏡 Vườn' },
+      { key: '/admin/real-plants', label: '🌿 Cây thật' },
+      { key: '/admin/virtual-plants', label: '🌱 Cây ảo người dùng' },
+      { key: '/admin/plant-updates', label: '📸 Cập nhật từ vườn' },
+    ],
+  },
+  {
+    key: 'content-group', icon: <AppstoreOutlined />, label: 'Nội dung',
+    children: [
+      { key: '/admin/flower-types', label: '🌸 Loại hoa' },
+      { key: '/admin/care-tasks', label: '✅ Nhiệm vụ chăm sóc' },
+    ],
+  },
 ];
+
 
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);

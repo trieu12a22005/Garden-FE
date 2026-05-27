@@ -1,8 +1,9 @@
-import { Row, Col, Card, Statistic, Typography, Table, Tag, Button, Space } from 'antd';
+import { Row, Col, Card, Statistic, Typography, Table, Tag, Button, Space, Select } from 'antd';
 import {
   EnvironmentOutlined, AppstoreOutlined, CheckCircleOutlined,
   ClockCircleOutlined, WarningOutlined, ReloadOutlined,
 } from '@ant-design/icons';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { gardenApi } from '../../apis/garden';
 import { realPlantApi } from '../../apis/realPlant';
@@ -25,8 +26,17 @@ export default function FarmerDashboard() {
     queryFn: () => realPlantApi.getAll(),
   });
 
+  const [gardenFilter, setGardenFilter] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
   const gardens = gardensData?.data ?? [];
-  const plants: RealPlant[] = plantsData?.data ?? [];
+  const allPlants: RealPlant[] = plantsData?.data ?? [];
+
+  const plants = allPlants.filter((p) => {
+    if (gardenFilter && p.gardenId !== gardenFilter) return false;
+    if (statusFilter && p.status !== statusFilter) return false;
+    return true;
+  });
 
   const assigned = plants.filter((p) => p.isAssigned).length;
   const unassigned = plants.filter((p) => !p.isAssigned).length;
@@ -64,6 +74,35 @@ export default function FarmerDashboard() {
   return (
     <div>
       <Title level={4} className="page-title">🌿 Tổng quan nhà vườn</Title>
+
+      <Card style={{ marginBottom: 24, borderRadius: 12 }}>
+        <Space wrap>
+          <Select
+            allowClear
+            placeholder="Tất cả các vườn"
+            style={{ width: 220 }}
+            options={gardens.map((g: any) => ({ value: g.id, label: g.name }))}
+            onChange={setGardenFilter}
+            value={gardenFilter}
+          />
+          <Select
+            allowClear
+            placeholder="Tất cả trạng thái"
+            style={{ width: 180 }}
+            options={[
+              { value: 'SEED', label: 'Hạt giống' },
+              { value: 'SPROUT', label: 'Nảy mầm' },
+              { value: 'GROWING', label: 'Đang lớn' },
+              { value: 'BUDDING', label: 'Ra nụ' },
+              { value: 'BLOOMING', label: 'Nở hoa' },
+              { value: 'NEEDS_CARE', label: 'Cần chăm sóc' },
+              { value: 'COMPLETED', label: 'Hoàn thành' },
+            ]}
+            onChange={setStatusFilter}
+            value={statusFilter}
+          />
+        </Space>
+      </Card>
 
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         {statCards.map((s) => (
