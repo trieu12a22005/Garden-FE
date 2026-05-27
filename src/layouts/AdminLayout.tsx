@@ -1,9 +1,9 @@
 import { Layout, Menu, Avatar, Dropdown, Button, Space, Typography } from 'antd';
 import {
   DashboardOutlined, TeamOutlined, EnvironmentOutlined,
-  AppstoreOutlined, PictureOutlined, UserOutlined,
+  AppstoreOutlined, UserOutlined,
   LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
-  BellOutlined, SettingOutlined, HeartOutlined, ExperimentOutlined,
+  BellOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';

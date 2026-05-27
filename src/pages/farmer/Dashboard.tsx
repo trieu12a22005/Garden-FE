@@ -1,4 +1,4 @@
-import { Row, Col, Card, Statistic, Typography, Table, Tag, Button, Space, Select } from 'antd';
+import { Row, Col, Card, Statistic, Typography, Table, Button, Space, Select } from 'antd';
 import {
   EnvironmentOutlined, AppstoreOutlined, CheckCircleOutlined,
   ClockCircleOutlined, WarningOutlined, ReloadOutlined,

@@ -1,4 +1,4 @@
-import { PlantStatus } from '../types';
+import type { PlantStatus } from '../types';
 import { Tag } from 'antd';
 
 const statusConfig: Record<PlantStatus, { label: string; className: string }> = {

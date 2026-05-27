@@ -1,7 +1,7 @@
 import {
-  Form, Input, Button, Card, Select, Upload, Typography, Space, Alert, Spin,
+  Form, Input, Button, Card, Select, Typography, Space, Alert, Spin,
 } from 'antd';
-import { UploadOutlined, SendOutlined } from '@ant-design/icons';
+import { SendOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';

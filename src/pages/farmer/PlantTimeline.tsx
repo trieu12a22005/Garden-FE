@@ -1,4 +1,4 @@
-import { Timeline, Card, Image, Typography, Spin, Tag, Empty } from 'antd';
+import { Timeline, Card, Image, Typography, Spin, Empty } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { realPlantApi } from '../../apis/realPlant';

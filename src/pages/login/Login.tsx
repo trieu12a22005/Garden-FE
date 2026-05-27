@@ -19,6 +19,8 @@ export default function LoginPage() {
     setError('');
     try {
       const res = await authApi.login(values);
+      useAuthStore.getState().setAccessToken(res.accessToken);
+      useAuthStore.getState().setRefreshToken(res.refreshToken);
       setUser(res.user);
       toast.success('Đăng nhập thành công!');
       if (res.user.role === 'ADMIN') navigate('/admin/dashboard');

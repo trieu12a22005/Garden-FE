@@ -4,10 +4,14 @@ import type { User } from '../types';
 export interface LoginResponse {
   message: string;
   user: User;
+  accessToken: string;
+  refreshToken: string;
 }
 
 interface RefreshTokenResponse {
   message: string;
+  accessToken: string;
+  refreshToken?: string;
 }
 
 class AuthApi {
@@ -19,7 +23,16 @@ class AuthApi {
   }
 
   async logout() {
-    const response = await apiClient.post('/auth/logout');
+    // Get refresh token from local storage (zustand)
+    const stateStr = localStorage.getItem('garden-auth');
+    let refreshToken = null;
+    if (stateStr) {
+      try {
+        const state = JSON.parse(stateStr);
+        refreshToken = state.state?.refreshToken;
+      } catch (e) {}
+    }
+    const response = await apiClient.post('/auth/logout', refreshToken ? { refreshToken } : {});
     return response.data;
   }
 
@@ -39,7 +52,15 @@ class AuthApi {
   }
 
   async refreshToken(): Promise<RefreshTokenResponse> {
-    const response = await apiClient.post<RefreshTokenResponse>('/auth/refresh', {}, {
+    const stateStr = localStorage.getItem('garden-auth');
+    let refreshToken = null;
+    if (stateStr) {
+      try {
+        const state = JSON.parse(stateStr);
+        refreshToken = state.state?.refreshToken;
+      } catch (e) {}
+    }
+    const response = await apiClient.post<RefreshTokenResponse>('/auth/refresh', refreshToken ? { refreshToken } : {}, {
       skipAuthRefresh: true,
     });
     return response.data;

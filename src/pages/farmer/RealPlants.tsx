@@ -1,5 +1,5 @@
 import {
-  Table, Button, Space, Typography, Card, Tag, Select, Input, Tooltip, Badge,
+  Table, Button, Space, Typography, Card, Select, Input, Tooltip, Badge,
 } from 'antd';
 import { EyeOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
@@ -84,9 +84,6 @@ export default function FarmerRealPlants() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <Title level={4} className="page-title" style={{ margin: 0 }}>🌿 Quản lý cây thật</Title>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => navigate('/farmer/real-plants/create')}>
-          Thêm cây thật
-        </Button>
       </div>
 
       <Card style={{ borderRadius: 12, marginBottom: 16 }}>

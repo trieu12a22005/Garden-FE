@@ -9,7 +9,7 @@ import {
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { careTaskApi } from '../../apis/careTask';
-import type { CareTask, CareTaskType, ResourceType, VerifyType } from '../../types';
+import type { CareTask, CareTaskType, VerifyType } from '../../types';
 import toast from 'react-hot-toast';
 
 const { Title, Text } = Typography;

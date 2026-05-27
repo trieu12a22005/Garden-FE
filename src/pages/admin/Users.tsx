@@ -1,7 +1,7 @@
 import {
-  Table, Input, Select, Card, Typography, Tag, Space, Switch, Button, Tooltip,
+  Table, Input, Select, Card, Typography, Tag, Space,
 } from 'antd';
-import { SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../apis/axios';

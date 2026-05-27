@@ -1,6 +1,6 @@
 import { Row, Col, Card, Statistic, Table, Typography, Select, Space } from 'antd';
 import {
-  UserOutlined, TeamOutlined, EnvironmentOutlined,
+  TeamOutlined, EnvironmentOutlined,
   AppstoreOutlined, HeartOutlined, PictureOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';

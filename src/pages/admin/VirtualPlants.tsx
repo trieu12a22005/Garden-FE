@@ -1,4 +1,4 @@
-import { Table, Card, Typography, Tag, Space, Input, Select, Progress, Avatar, Tooltip } from 'antd';
+import { Table, Card, Typography, Tag, Space, Input, Select, Avatar, Tooltip } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';

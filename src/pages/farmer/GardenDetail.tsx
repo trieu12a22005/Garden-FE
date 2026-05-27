@@ -12,7 +12,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { gardenApi, type PlantTypeSummary } from '../../apis/garden';
 import { realPlantApi } from '../../apis/realPlant';
 import { flowerTypeApi } from '../../apis/flowerType';
-import { useAuthStore } from '../../store/authStore';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 
@@ -33,7 +32,6 @@ export default function GardenDetail() {
   const { id: gardenId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const { user } = useAuthStore();
   const [addModal, setAddModal] = useState(false);
   const [form] = Form.useForm();
 

@@ -2,7 +2,7 @@ import {
   Table, Button, Space, Modal, Form, Input, Tag, Typography, Card, Tooltip, Select,
 } from 'antd';
 import {
-  PlusOutlined, EditOutlined, CheckOutlined, CloseOutlined,
+  PlusOutlined, CheckOutlined, CloseOutlined,
   DeleteOutlined, ClockCircleOutlined, CheckCircleOutlined, CloseCircleOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';

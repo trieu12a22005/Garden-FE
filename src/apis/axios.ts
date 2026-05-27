@@ -49,7 +49,26 @@ const handleAuthFailure = () => {
 
   isHandlingAuthFailure = true;
   authInterceptorConfig?.onAuthFailure();
+
+  // Reset flag after a short delay to allow subsequent auth failures after re-login
+  setTimeout(() => {
+    isHandlingAuthFailure = false;
+  }, 1000);
 };
+
+// Add request interceptor to include Authorization header
+apiClient.interceptors.request.use((config) => {
+  const stateStr = localStorage.getItem('garden-auth');
+  if (stateStr) {
+    try {
+      const state = JSON.parse(stateStr);
+      if (state.state?.accessToken) {
+        config.headers.Authorization = `Bearer ${state.state.accessToken}`;
+      }
+    } catch (e) { }
+  }
+  return config;
+});
 
 const refreshAccessToken = async () => {
   if (!authInterceptorConfig) {
@@ -59,7 +78,21 @@ const refreshAccessToken = async () => {
   if (!refreshPromise) {
     refreshPromise = authInterceptorConfig
       .refreshAccessToken()
-      .then(() => undefined)
+      .then((res: any) => {
+        // Save new tokens
+        const stateStr = localStorage.getItem('garden-auth');
+        if (stateStr) {
+          try {
+            const state = JSON.parse(stateStr);
+            state.state.accessToken = res.accessToken;
+            if (res.refreshToken) {
+              state.state.refreshToken = res.refreshToken;
+            }
+            localStorage.setItem('garden-auth', JSON.stringify(state));
+          } catch (e) { }
+        }
+        return undefined;
+      })
       .finally(() => {
         refreshPromise = null;
       });

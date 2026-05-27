@@ -1,4 +1,4 @@
-import { Table, Card, Typography, Select, Space, Image, Tag } from 'antd';
+import { Table, Card, Typography, Select, Image } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { gardenApi } from '../../apis/garden';
 import { apiClient } from '../../apis/axios';

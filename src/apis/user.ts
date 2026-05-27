@@ -1,5 +1,4 @@
 import { apiClient } from './axios';
-import type { User } from '../types';
 
 class UserApi {
   async getAll(params?: { role?: string; page?: number; limit?: number }) {
