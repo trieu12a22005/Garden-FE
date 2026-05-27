@@ -1,7 +1,7 @@
 import {
   Table, Button, Space, Typography, Card, Select, Input, Tooltip, Badge,
 } from 'antd';
-import { EyeOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons';
+import { EyeOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { realPlantApi } from '../../apis/realPlant';
