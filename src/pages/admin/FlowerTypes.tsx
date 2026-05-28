@@ -1,6 +1,6 @@
 import {
   Table, Button, Space, Modal, Form, Input, InputNumber,
-  Typography, Card, Tooltip, Image, Tabs, Tag, Divider,
+  Typography, Card, Tooltip, Image, Tabs, Tag, Divider, Popconfirm,
 } from 'antd';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined,
@@ -134,15 +134,17 @@ export default function AdminFlowerTypes() {
       render: (_: any, r: FlowerType) => (
         <Space>
           <Tooltip title="Chỉnh sửa"><Button icon={<EditOutlined />} size="small" onClick={() => openEdit(r)} /></Tooltip>
-          <Tooltip title="Xóa">
-            <Button icon={<DeleteOutlined />} size="small" danger
-              onClick={() => Modal.confirm({
-                title: `Xóa loại hoa "${r.name}"?`,
-                content: 'Không thể xóa nếu đang có cây thật dùng loại hoa này.',
-                onOk: () => deleteMut.mutate(r.id),
-              })}
-            />
-          </Tooltip>
+          <Popconfirm
+            title={`Xóa loại hoa "${r.name}"?`}
+            description="Không thể xóa nếu đang có cây thật dùng loại hoa này."
+            onConfirm={() => deleteMut.mutate(r.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <Tooltip title="Xóa">
+              <Button icon={<DeleteOutlined />} size="small" danger />
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
