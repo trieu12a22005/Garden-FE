@@ -36,7 +36,7 @@ export default function AdminFlowerTypes() {
   const createMut = useMutation({
     mutationFn: (values: Partial<FlowerType>) => flowerTypeApi.create(values),
     onSuccess: () => { toast.success('Tạo loại hoa thành công'); qc.invalidateQueries({ queryKey: ['flower-types'] }); setModalOpen(false); },
-    onError: () => toast.error('Lỗi khi tạo loại hoa'),
+    onError: (err: any) => toast.error(`Lỗi khi tạo loại hoa: ${err?.response?.data?.error || err?.response?.data?.message || err.message}`),
   });
 
   const updateMut = useMutation({
@@ -47,8 +47,8 @@ export default function AdminFlowerTypes() {
 
   const deleteMut = useMutation({
     mutationFn: (id: string) => flowerTypeApi.remove(id),
-    onSuccess: () => { toast.success('Đã xóa'); qc.invalidateQueries({ queryKey: ['flower-types'] }); },
-    onError: () => toast.error('Lỗi khi xóa — có thể đang có cây đang dùng loại hoa này'),
+    onSuccess: () => { toast.success('Đã xóa loại hoa'); qc.invalidateQueries({ queryKey: ['flower-types'] }); },
+    onError: (err: any) => toast.error(`Lỗi khi xóa: ${err?.response?.data?.error || err?.response?.data?.message || err.message}`),
   });
 
   const openCreate = () => { setEditing(null); form.resetFields(); setModalOpen(true); };
