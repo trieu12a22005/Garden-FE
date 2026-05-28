@@ -78,8 +78,10 @@ export default function AdminFlowerTypes() {
       if (raw[`stageImages_${s}`]) stageImages[s] = raw[`stageImages_${s}`];
     });
     const values: Partial<FlowerType> = {
-      name: raw.name, description: raw.description,
-      imageUrl: raw.imageUrl, defaultDuration: raw.defaultDuration,
+      name: raw.name,
+      description: raw.description || undefined,
+      imageUrl: raw.imageUrl || undefined,
+      defaultDuration: raw.defaultDuration || undefined,
       stageDurations: Object.keys(stageDurations).length ? stageDurations : undefined,
       stageImages: Object.keys(stageImages).length ? stageImages : undefined,
     };
