@@ -7,7 +7,9 @@ class CareTaskApi {
     return res.data;
   }
   async create(data: FormData) {
-    const res = await apiClient.post('/care-tasks', data);
+    const res = await apiClient.post('/care-tasks', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   }
   async update(id: string, data: Partial<CareTask>) {
@@ -17,7 +19,9 @@ class CareTaskApi {
   async uploadCharacterImage(id: string, file: File) {
     const form = new FormData();
     form.append('image', file);
-    const res = await apiClient.post(`/care-tasks/${id}/character-image`, form);
+    const res = await apiClient.post(`/care-tasks/${id}/character-image`, form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   }
   async removeCharacterImage(id: string) {

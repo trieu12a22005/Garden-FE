@@ -1,6 +1,6 @@
 import {
   Table, Button, Space, Modal, Form, Input, InputNumber,
-  Typography, Card, Tooltip, Image, Tabs, Tag, Divider, Popconfirm,
+  Typography, Card, Tooltip, Image, Tabs, Tag, Divider, Popconfirm, Upload
 } from 'antd';
 import {
   PlusOutlined, EditOutlined, DeleteOutlined,
@@ -21,6 +21,37 @@ const STAGE_LABELS: Record<PlantStatus, string> = {
   NEEDS_CARE: 'Cần chăm sóc', COMPLETED: 'Hoàn thành',
 };
 const GROWTH_STAGES: PlantStatus[] = ['SEED', 'SPROUT', 'GROWING', 'BUDDING', 'BLOOMING'];
+
+import { UploadOutlined } from '@ant-design/icons';
+import { uploadImage } from '../../apis/upload';
+
+const ImageUploadInput = ({ value, onChange }: { value?: string; onChange?: (val: string) => void }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleUpload = async (options: any) => {
+    const { file } = options;
+    setLoading(true);
+    try {
+      const res = await uploadImage(file as File);
+      onChange?.(res.url);
+      toast.success('Tải ảnh lên thành công');
+    } catch (err) {
+      toast.error('Lỗi khi tải ảnh');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Space style={{ display: 'flex' }}>
+      <Input value={value} onChange={e => onChange?.(e.target.value)} placeholder="https://..." style={{ flex: 1, minWidth: 250 }} />
+      <Upload customRequest={handleUpload} showUploadList={false} accept="image/*">
+        <Button icon={<UploadOutlined />} loading={loading}>Tải lên</Button>
+      </Upload>
+      {value && <Image src={value} width={32} height={32} style={{ objectFit: 'cover', borderRadius: 4 }} />}
+    </Space>
+  );
+};
 
 export default function AdminFlowerTypes() {
   const qc = useQueryClient();
@@ -178,7 +209,7 @@ export default function AdminFlowerTypes() {
                     <Input.TextArea rows={3} />
                   </Form.Item>
                   <Form.Item name="imageUrl" label="Ảnh đại diện (URL)">
-                    <Input placeholder="https://..." />
+                    <ImageUploadInput />
                   </Form.Item>
                   <Form.Item name="defaultDuration" label="Tổng số ngày phát triển dự kiến">
                     <InputNumber min={1} max={365} style={{ width: '100%' }} addonAfter="ngày" />
@@ -210,7 +241,7 @@ export default function AdminFlowerTypes() {
                   </Text>
                   {GROWTH_STAGES.map(s => (
                     <Form.Item key={s} name={`stageImages_${s}`} label={`Ảnh giai đoạn: ${STAGE_LABELS[s]}`}>
-                      <Input placeholder="https://res.cloudinary.com/..." />
+                      <ImageUploadInput />
                     </Form.Item>
                   ))}
                 </>
