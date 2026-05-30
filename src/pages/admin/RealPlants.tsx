@@ -1,6 +1,6 @@
 import {
   Table, Button, Space, Modal, Form, InputNumber,
-  Typography, Card, Select, Tag, Tooltip, Badge, DatePicker, Divider, Statistic, Row, Col, Image, Popconfirm,
+  Typography, Card, Select, Badge, Image, Statistic, Row, Col, DatePicker, Divider,
 } from 'antd';
 import {
   PlusOutlined, EyeOutlined, FilterOutlined, ReloadOutlined, ExperimentOutlined,
@@ -75,18 +75,6 @@ export default function AdminRealPlants() {
 
   // ─── Options ────────────────────────────────────────────────────────
   const gardenOptions = gardens.map((g) => ({ value: g.id, label: g.name }));
-  const flowerTypeOptions = flowerTypes.map((f) => ({
-    value: f.id,
-    label: (
-      <Space size={8}>
-        {f.imageUrl
-          ? <Image src={f.imageUrl} width={20} height={20} style={{ objectFit: 'cover', borderRadius: 4 }} preview={false} />
-          : <span>🌸</span>}
-        <span>{f.name}</span>
-      </Space>
-    ),
-  }));
-
   const onBatchFinish = (raw: any) => {
     batchCreateMut.mutate({
       flowerTypeId: raw.flowerTypeId,

@@ -1,6 +1,6 @@
 import {
-  Button, Space, Typography, Card, Select, Input, Badge, Tag, Tabs,
-  Modal, Form, Image, Spin, Empty, Upload, message, Tooltip,
+  Button, Space, Typography, Card, Select, Input, Badge, Tabs,
+  Modal, Form, Image, Spin, Empty, Upload,
 } from 'antd';
 import type { UploadProps } from 'antd';
 import {
