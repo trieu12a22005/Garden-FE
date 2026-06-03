@@ -16,6 +16,15 @@ class PlantUpdateApi {
     const res = await apiClient.post('/plant-updates', data);
     return res.data;
   }
+  // ADMIN — lấy tất cả cập nhật (community feed)
+  async getAll(params?: { gardenId?: string; page?: number; limit?: number }): Promise<{ data: PlantUpdate[] }> {
+    const res = await apiClient.get('/plant-updates/all', { params });
+    return res.data;
+  }
+  async delete(id: string) {
+    const res = await apiClient.delete(`/plant-updates/${id}`);
+    return res.data;
+  }
 }
 
 export const plantUpdateApi = new PlantUpdateApi();

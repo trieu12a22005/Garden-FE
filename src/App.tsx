@@ -37,6 +37,7 @@ import AdminCareTasks from './pages/admin/CareTasks';
 import AdminPlantUpdates from './pages/admin/PlantUpdates';
 import AdminVirtualPlants from './pages/admin/VirtualPlants';
 import AdminRealPlants from './pages/admin/RealPlants';
+import AdminCommunity from './pages/admin/Community';
 
 const antdTheme = {
   token: {
@@ -108,6 +109,7 @@ function App() {
           <Route path="care-tasks" element={<AdminCareTasks />} />
           <Route path="plant-updates" element={<AdminPlantUpdates />} />
           <Route path="virtual-plants" element={<AdminVirtualPlants />} />
+          <Route path="community" element={<AdminCommunity />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

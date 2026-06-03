@@ -29,7 +29,7 @@ export interface Garden {
 export type PlantStatus = 'SEED' | 'SPROUT' | 'GROWING' | 'BUDDING' | 'BLOOMING' | 'RESTING' | 'NEEDS_CARE' | 'COMPLETED';
 
 export type ResourceType = 'WATER' | 'SUNLIGHT' | 'FERTILIZER' | 'AIR' | 'LOVE' | 'DEW';
-export type VerifyType = 'SELF_CONFIRM' | 'TIMER' | 'OPTIONAL_PHOTO';
+export type VerifyType = 'SELF_CONFIRM' | 'TIMER' | 'PHOTO_OPTIONAL' | 'PHOTO_REQUIRED';
 export type CareTaskType = 'WATER_PLANT' | 'BREATHING' | 'DRINK_WATER' | 'WRITE_JOURNAL' | 'LISTEN_SOUND' | 'SHORT_WALK';
 
 export interface FlowerType {

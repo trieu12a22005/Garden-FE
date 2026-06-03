@@ -3,7 +3,7 @@ import {
   DashboardOutlined, TeamOutlined, EnvironmentOutlined,
   AppstoreOutlined, UserOutlined,
   LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined,
-  BellOutlined,
+  BellOutlined, GlobalOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -38,6 +38,9 @@ const adminMenuItems = [
       { key: '/admin/flower-types', label: '🌸 Loại hoa' },
       { key: '/admin/care-tasks', label: '✅ Nhiệm vụ chăm sóc' },
     ],
+  },
+  {
+    key: '/admin/community', icon: <GlobalOutlined />, label: '🌿 Cộng đồng',
   },
 ];
 

@@ -35,7 +35,8 @@ const RESOURCE_OPTIONS = [
 const VERIFY_OPTIONS = [
   { value: 'SELF_CONFIRM',   label: '✅ Tự xác nhận' },
   { value: 'TIMER',          label: '⏱ Đếm ngược' },
-  { value: 'OPTIONAL_PHOTO', label: '📷 Ảnh tuỳ chọn' },
+  { value: 'PHOTO_OPTIONAL', label: '📷 Ảnh tuỳ chọn' },
+  { value: 'PHOTO_REQUIRED', label: '📸 Bắt buộc ảnh' },
 ];
 
 const RESOURCE_COLORS: Record<string, string> = {
@@ -104,8 +105,12 @@ export default function AdminCareTasks() {
   };
 
   const onFinish = (values: any) => {
-    if (editing) updateMut.mutate({ id: editing.id, values });
-    else createMut.mutate(values);
+    const payload = { ...values };
+    if (!payload.type) {
+      delete payload.type;
+    }
+    if (editing) updateMut.mutate({ id: editing.id, values: payload });
+    else createMut.mutate(payload);
   };
 
   const columns = [
@@ -199,8 +204,8 @@ export default function AdminCareTasks() {
           <Form.Item name="title" label="Tiêu đề" rules={[{ required: true }]}>
             <Input placeholder="Vd: Tưới cây ảo hôm nay" />
           </Form.Item>
-          <Form.Item name="type" label="Loại nhiệm vụ" rules={[{ required: true }]}>
-            <Select options={TASK_TYPE_OPTIONS} />
+          <Form.Item name="type" label="Loại nhiệm vụ">
+            <Select options={TASK_TYPE_OPTIONS} placeholder="Chọn loại (không bắt buộc)" allowClear />
           </Form.Item>
           <Form.Item name="description" label="Mô tả">
             <Input.TextArea rows={2} />
